@@ -1,596 +1,258 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#1A1215">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Florea — Ciclo & Saúde</title>
-    <link rel="manifest" id="manifest-link">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=Playfair+Display:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        :root{--bg:#1A1215;--bg-elevated:#231C1F;--bg-card:#2C2326;--fg:#F5EDE8;--fg-muted:#8A7B7F;--fg-dim:#5A4E52;--accent:#E87461;--accent-soft:rgba(232,116,97,0.15);--accent-glow:rgba(232,116,97,0.3);--green:#6BCB8B;--green-soft:rgba(107,203,139,0.15);--yellow:#F0C75E;--yellow-soft:rgba(240,199,94,0.15);--blue:#7BA4C9;--blue-soft:rgba(123,164,201,0.15);--pink:#D4729A;--pink-soft:rgba(212,114,154,0.2);--red:#E74C3C;--red-soft:rgba(231,76,60,0.12);--radius:16px;--radius-sm:10px;--radius-xs:6px;--shadow:0 4px 24px rgba(0,0,0,0.3)}
-        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-        body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--fg);min-height:100dvh;overflow-x:hidden;position:relative}
-        body::before{content:'';position:fixed;top:-30%;left:-20%;width:70vw;height:70vw;background:radial-gradient(circle,var(--accent-glow)0%,transparent 70%);pointer-events:none;z-index:0;animation:floatBlob 12s ease-in-out infinite}
-        body::after{content:'';position:fixed;bottom:-20%;right:-20%;width:60vw;height:60vw;background:radial-gradient(circle,rgba(212,114,154,0.12)0%,transparent 70%);pointer-events:none;z-index:0;animation:floatBlob 15s ease-in-out infinite reverse}
-        @keyframes floatBlob{0%,100%{transform:translate(0,0)scale(1)}33%{transform:translate(5%,8%)scale(1.05)}66%{transform:translate(-3%,-5%)scale(0.95)}}
-        .app-container{position:relative;z-index:1;max-width:430px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
-        .app-header{padding:20px 20px 0;display:flex;justify-content:space-between;align-items:center}
-        .app-logo{display:flex;align-items:center;gap:10px}
-        .app-logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--pink));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff}
-        .app-logo-text{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;background:linear-gradient(135deg,var(--fg),var(--fg-muted));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .header-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--fg-dim);background:var(--bg-elevated);color:var(--fg-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:14px}
-        .header-btn:hover{border-color:var(--accent);color:var(--accent)}
-        .main-content{flex:1;padding:20px;padding-bottom:100px;overflow-y:auto;scroll-behavior:smooth}
-        .page{display:none;animation:fadeIn .3s ease}.page.active{display:block}
-        @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-        .card{background:var(--bg-card);border-radius:var(--radius);padding:20px;border:1px solid rgba(255,255,255,0.04);margin-bottom:16px;transition:transform .2s}
-        .card:active{transform:scale(0.98)}
-        .card-title{font-size:13px;font-weight:500;color:var(--fg-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
-        .phase-hero{background:linear-gradient(135deg,var(--bg-card)0%,rgba(232,116,97,0.08)100%);border:1px solid rgba(232,116,97,0.15);position:relative;overflow:hidden}
-        .phase-hero::before{content:'';position:absolute;top:-50%;right:-30%;width:200px;height:200px;background:radial-gradient(circle,var(--accent-glow)0%,transparent 70%);pointer-events:none}
-        .phase-name{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;margin-bottom:4px;position:relative}
-        .phase-subtitle{color:var(--fg-muted);font-size:14px;font-weight:300;position:relative}
-        .phase-stats{display:flex;gap:12px;margin-top:18px;position:relative}
-        .phase-stat{flex:1;background:rgba(0,0,0,0.25);border-radius:var(--radius-sm);padding:12px 8px;text-align:center}
-        .phase-stat-value{font-size:20px;font-weight:700;color:var(--accent)}
-        .phase-stat-label{font-size:10px;color:var(--fg-muted);margin-top:2px}
-        .cycle-progress-bar{width:100%;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;margin-top:16px;overflow:hidden}
-        .cycle-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--pink));border-radius:3px;transition:width .6s ease}
-        .safety-alert{background:var(--red-soft);border:1px solid rgba(231,76,60,0.25);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start}
-        .safety-alert i{color:var(--red);font-size:16px;margin-top:2px;flex-shrink:0}
-        .safety-alert-text{font-size:13px;color:var(--fg);line-height:1.6}
-        .safety-alert-text strong{color:var(--red)}
-        .info-alert{background:var(--yellow-soft);border:1px solid rgba(240,199,94,0.2);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start}
-        .info-alert i{color:var(--yellow);font-size:16px;margin-top:2px;flex-shrink:0}
-        .info-alert-text{font-size:13px;color:var(--fg);line-height:1.6}
-        .info-alert-text strong{color:var(--yellow)}
-        .calendar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-        .calendar-month{font-family:'Playfair Display',serif;font-size:20px;font-weight:700}
-        .calendar-nav{display:flex;gap:6px}
-        .calendar-nav-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--fg-dim);background:transparent;color:var(--fg-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .2s}
-        .calendar-nav-btn:hover{border-color:var(--accent);color:var(--accent)}
-        .calendar-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px}
-        .calendar-weekday{text-align:center;font-size:11px;color:var(--fg-dim);font-weight:500;padding:4px 0}
-        .calendar-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-        .calendar-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:14px;font-weight:400;cursor:pointer;transition:all .2s;position:relative;color:var(--fg)}
-        .calendar-day:hover{background:rgba(255,255,255,0.06)}
-        .calendar-day.other-month{color:var(--fg-dim);opacity:0.4}
-        .calendar-day.today{background:var(--accent);color:#fff;font-weight:700}
-        .calendar-day.predicted-menstruation{background:var(--pink-soft);color:var(--pink);font-weight:600}
-        .calendar-day.predicted-menstruation.today{background:var(--accent);color:#fff}
-        .calendar-day.logged-menstruation::after{content:'';position:absolute;bottom:3px;width:4px;height:4px;border-radius:50%;background:var(--accent)}
-        .calendar-day.logged-menstruation.today::after{background:#fff}
-        .calendar-day.med-pause-day{border:1px dashed rgba(240,199,94,0.35);background:rgba(240,199,94,0.06)}
-        .calendar-day.med-pause-day.today{background:var(--accent);color:#fff;border:none}
-        .calendar-day.selected{outline:2px solid var(--accent);outline-offset:2px}
-        .calendar-legend{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}
-        .legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--fg-muted)}
-        .legend-dot{width:8px;height:8px;border-radius:50%}
-        .legend-line{width:12px;height:0;border-top:2px dashed var(--yellow);opacity:0.6}
-        .symptom-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-        .symptom-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px;border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--fg-muted);cursor:pointer;transition:all .2s;font-size:10px;font-family:'Outfit',sans-serif}
-        .symptom-btn i{font-size:20px;transition:all .2s}
-        .symptom-btn.active{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
-        .symptom-btn.active i{transform:scale(1.15)}
-        .intensity-row{display:flex;gap:8px;margin-top:16px}
-        .intensity-btn{flex:1;height:36px;border-radius:var(--radius-xs);border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--fg-muted);cursor:pointer;transition:all .2s;font-size:12px;font-family:'Outfit',sans-serif}
-        .intensity-btn.active-low{border-color:var(--green);background:var(--green-soft);color:var(--green)}
-        .intensity-btn.active-med{border-color:var(--yellow);background:var(--yellow-soft);color:var(--yellow)}
-        .intensity-btn.active-high{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
-        .note-input{width:100%;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-sm);padding:12px;color:var(--fg);font-family:'Outfit',sans-serif;font-size:14px;resize:none;outline:none;transition:border-color .2s;min-height:60px}
-        .note-input:focus{border-color:var(--accent)}.note-input::placeholder{color:var(--fg-dim)}
-        .save-btn{width:100%;padding:14px;border:none;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--accent),var(--pink));color:#fff;font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;margin-top:16px}
-        .save-btn:active{transform:scale(0.97)}.save-btn.danger{background:linear-gradient(135deg,#c0392b,#e74c3c)}.save-btn.outline{background:transparent;border:1px solid var(--fg-dim);color:var(--fg-muted);margin-top:8px}
-        .med-card{display:flex;flex-direction:column;background:var(--bg-card);border-radius:var(--radius);border:1px solid rgba(255,255,255,0.04);margin-bottom:10px;overflow:hidden;transition:all .2s}
-        .med-card-top{display:flex;align-items:center;gap:14px;padding:16px 16px 12px}
-        .med-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-        .med-info{flex:1;min-width:0}.med-name{font-weight:600;font-size:15px}.med-dose{font-size:12px;color:var(--fg-muted);margin-top:2px}.med-time{font-size:12px;color:var(--fg-dim);margin-top:1px}
-        .med-actions{display:flex;gap:4px;align-items:center;flex-shrink:0}
-        .med-check{width:32px;height:32px;border-radius:50%;border:2px solid var(--fg-dim);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:transparent;transition:all .3s;font-size:14px;flex-shrink:0}
-        .med-check.taken{border-color:var(--green);background:var(--green);color:#fff;animation:popIn .3s ease}
-        @keyframes popIn{0%{transform:scale(0.5)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
-        .med-action-btn{width:28px;height:28px;border-radius:50%;border:none;background:transparent;color:var(--fg-dim);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .2s}
-        .med-action-btn:hover{color:var(--fg);background:rgba(255,255,255,0.06)}.med-action-btn.delete:hover{color:var(--accent)}
-        .med-cycle-bar{margin:0 16px 12px}
-        .med-cycle-label{display:flex;justify-content:space-between;font-size:11px;margin-bottom:6px}
-        .med-cycle-label-take{color:var(--green)}.med-cycle-label-pause{color:var(--yellow)}
-        .med-cycle-track{width:100%;height:8px;border-radius:4px;overflow:hidden;display:flex;background:rgba(255,255,255,0.04)}
-        .med-cycle-take{background:var(--green);transition:width .5s ease;border-radius:4px 0 0 4px}
-        .med-cycle-take.active{box-shadow:0 0 8px rgba(107,203,139,0.4)}
-        .med-cycle-pause{background:var(--yellow-soft);transition:width .5s ease;border-radius:0 4px 4px 0}
-        .med-cycle-pause.active{background:var(--yellow);box-shadow:0 0 8px rgba(240,199,94,0.4)}
-        .med-cycle-day-marker{position:relative;height:0}
-        .med-cycle-day-dot{width:12px;height:12px;background:var(--fg);border:2px solid var(--bg-card);border-radius:50%;position:absolute;top:-10px;transform:translateX(-50%);z-index:2;box-shadow:0 0 6px rgba(0,0,0,0.5)}
-        .med-cycle-info{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
-        .med-cycle-status{font-size:11px;font-weight:500;padding:3px 8px;border-radius:12px}
-        .med-cycle-status.taking{background:var(--green-soft);color:var(--green)}
-        .med-cycle-status.paused{background:var(--yellow-soft);color:var(--yellow)}
-        .med-cycle-days-left{font-size:11px;color:var(--fg-dim)}
-        .med-progress{display:flex;align-items:center;gap:10px;margin-bottom:16px}
-        .med-progress-bar{flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden}
-        .med-progress-fill{height:100%;background:var(--green);border-radius:2px;transition:width .5s ease}
-        .med-progress-text{font-size:12px;color:var(--fg-muted);white-space:nowrap}
-        .form-group{margin-bottom:14px}
-        .form-label{font-size:12px;color:var(--fg-muted);font-weight:500;margin-bottom:6px;display:block}
-        .form-input{width:100%;padding:12px;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius-sm);color:var(--fg);font-family:'Outfit',sans-serif;font-size:14px;outline:none;transition:border-color .2s}
-        .form-input:focus{border-color:var(--accent)}.form-select option{background:var(--bg-card);color:var(--fg)}
-        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-        .form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-        .insight-card{display:flex;align-items:center;gap:14px;padding:16px;background:var(--bg-card);border-radius:var(--radius);border:1px solid rgba(255,255,255,0.04);margin-bottom:10px}
-        .insight-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-        .insight-info{flex:1}.insight-title{font-weight:600;font-size:14px}.insight-desc{font-size:12px;color:var(--fg-muted);margin-top:2px}
-        .mini-chart{display:flex;align-items:flex-end;gap:3px;height:60px;padding:0 4px}
-        .mini-chart-bar{flex:1;background:linear-gradient(to top,var(--accent),var(--pink));border-radius:3px 3px 0 0;min-height:4px;transition:height .5s ease;opacity:0.7}
-        .settings-item{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
-        .settings-item:last-child{border-bottom:none}
-        .settings-label{display:flex;align-items:center;gap:12px}
-        .settings-label i{width:20px;text-align:center;color:var(--fg-muted);font-size:16px}
-        .settings-label span{font-size:14px}
-        .settings-value{font-size:13px;color:var(--fg-muted);display:flex;align-items:center;gap:6px;cursor:pointer}
-        .toggle{width:46px;height:26px;background:var(--fg-dim);border-radius:13px;position:relative;cursor:pointer;transition:background .3s;border:none}
-        .toggle.on{background:var(--accent)}
-        .toggle::after{content:'';width:20px;height:20px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:transform .3s}
-        .toggle.on::after{transform:translateX(20px)}
-        .toast-container{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none;width:90%;max-width:400px}
-        .toast{background:var(--bg-card);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-sm);padding:14px 18px;font-size:13px;color:var(--fg);box-shadow:var(--shadow);animation:toastIn .3s ease,toastOut .3s ease 4s forwards;pointer-events:auto;display:flex;align-items:flex-start;gap:10px}
-        @keyframes toastIn{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
-        @keyframes toastOut{from{opacity:1}to{opacity:0;transform:translateY(-10px)}}
-        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1000;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
-        .modal-overlay.show{display:flex}
-        .modal-full{align-items:center!important}
-        .modal-sheet{background:var(--bg-elevated);border-radius:var(--radius) var(--radius) 0 0;padding:24px 20px 40px;width:100%;max-width:430px;max-height:85vh;overflow-y:auto;animation:slideUp .3s ease}
-        .modal-full .modal-sheet{border-radius:var(--radius);max-height:90vh;margin:20px}
-        @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-        .modal-handle{width:36px;height:4px;background:var(--fg-dim);border-radius:2px;margin:0 auto 20px}
-        .modal-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:20px}
-        .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(26,18,21,0.92);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,0.06);display:flex;padding:8px 0 max(8px,env(safe-area-inset-bottom));z-index:100}
-        .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0;cursor:pointer;color:var(--fg-dim);transition:color .2s;border:none;background:none;font-family:'Outfit',sans-serif}
-        .nav-item i{font-size:20px;transition:all .2s}.nav-item span{font-size:10px;font-weight:500}
-        .nav-item.active{color:var(--accent)}.nav-item.active i{transform:scale(1.1)}
-        .fab{position:fixed;bottom:90px;right:max(20px,calc((100vw-430px)/2+20px));width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--pink));border:none;color:#fff;font-size:22px;cursor:pointer;box-shadow:0 4px 20px var(--accent-glow);z-index:99;display:flex;align-items:center;justify-content:center;transition:all .2s}
-        .fab:active{transform:scale(0.9)}
-        .empty-state{text-align:center;padding:40px 20px;color:var(--fg-dim)}.empty-state i{font-size:40px;margin-bottom:12px;display:block}.empty-state p{font-size:14px}
-        .prediction-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--fg-dim);background:rgba(255,255,255,0.04);padding:3px 8px;border-radius:20px;margin-top:8px}
-        .delete-btn{background:none;border:none;color:var(--fg-dim);cursor:pointer;padding:4px;font-size:14px;transition:color .2s}.delete-btn:hover{color:var(--accent)}
-        .tip-card{background:linear-gradient(135deg,rgba(232,116,97,0.08),rgba(212,114,154,0.06));border:1px solid rgba(232,116,97,0.12);border-radius:var(--radius);padding:16px;margin-bottom:16px}
-        .tip-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-        .tip-header i{color:var(--accent);font-size:16px}.tip-header span{font-size:14px;font-weight:600;color:var(--accent)}
-        .tip-body{font-size:13px;color:var(--fg-muted);line-height:1.6}
-        .tip-meds{margin-top:10px}
-        .tip-med-item{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(0,0,0,0.2);border-radius:var(--radius-xs);margin-bottom:6px;font-size:12px}
-        .tip-med-item i{color:var(--green);font-size:14px;flex-shrink:0}
-        .tip-med-name{font-weight:600;color:var(--fg)}.tip-med-desc{color:var(--fg-dim)}
-        .tip-warning{margin-top:8px;font-size:11px;color:var(--yellow);display:flex;align-items:flex-start;gap:6px}
-        .tip-danger{margin-top:8px;font-size:12px;color:var(--red);display:flex;align-items:flex-start;gap:6px;background:var(--red-soft);padding:10px 12px;border-radius:var(--radius-xs);line-height:1.5}
-        .tip-danger i{flex-shrink:0;margin-top:2px}
-        .alarm-overlay{position:fixed;inset:0;z-index:10000;background:rgba(26,18,21,0.95);backdrop-filter:blur(20px);display:none;align-items:center;justify-content:center;flex-direction:column;gap:20px;padding:40px;animation:alarmPulse 2s ease-in-out infinite}
-        .alarm-overlay.show{display:flex}
-        @keyframes alarmPulse{0%,100%{background:rgba(26,18,21,0.95)}50%{background:rgba(232,116,97,0.12)}}
-        .alarm-icon{width:80px;height:80px;border-radius:50%;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--accent);animation:alarmShake .5s ease-in-out infinite}
-        @keyframes alarmShake{0%,100%{transform:rotate(0)}25%{transform:rotate(15deg)}75%{transform:rotate(-15deg)}}
-        .alarm-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;text-align:center}
-        .alarm-med-name{font-size:16px;color:var(--accent);text-align:center}
-        .alarm-dose{font-size:14px;color:var(--fg-muted);text-align:center}
-        .alarm-dismiss{padding:14px 48px;border:none;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--accent),var(--pink));color:#fff;font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;cursor:pointer;margin-top:10px}
-        .greeting{font-size:14px;color:var(--fg-muted);font-weight:300;margin-bottom:2px}
-        .greeting-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:16px}
-        .no-cycle-badge{font-size:10px;color:var(--fg-dim);background:rgba(255,255,255,0.04);padding:2px 8px;border-radius:10px;margin-left:6px}
-        .tut-step{display:none;animation:fadeIn .3s ease}.tut-step.active{display:block}
-        .tut-visual{background:rgba(0,0,0,0.3);border-radius:var(--radius-sm);padding:20px;margin:16px 0;text-align:center}
-        .tut-step-dots{display:flex;gap:6px;justify-content:center;margin:16px 0}
-        .tut-step-dot{width:8px;height:8px;border-radius:50%;background:var(--fg-dim);transition:all .3s}
-        .tut-step-dot.active{background:var(--accent);transform:scale(1.3)}.tut-step-dot.done{background:var(--green)}
-        .tut-fake-bar{display:flex;height:8px;border-radius:4px;overflow:hidden;margin:10px 0}
-        .tut-fake-take{background:var(--green);transition:width .5s}.tut-fake-pause{background:var(--yellow);transition:width .5s}
-        .tut-fake-marker{position:relative}.tut-fake-dot{width:14px;height:14px;background:var(--fg);border:2px solid var(--bg-elevated);border-radius:50%;position:absolute;top:-3px;transform:translateX(-50%);box-shadow:0 0 8px rgba(0,0,0,0.5)}
-        .tut-example-box{background:rgba(0,0,0,0.2);border-radius:var(--radius-xs);padding:12px;margin:8px 0;font-size:12px;text-align:left;display:flex;align-items:center;gap:10px}
-        .tut-example-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-        ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--fg-dim);border-radius:2px}
-        .card,.med-card,.insight-card,.tip-card,.safety-alert,.info-alert{opacity:0;transform:translateY(15px);animation:cardIn .4s ease forwards}
-        .card:nth-child(1),.med-card:nth-child(1),.insight-card:nth-child(1),.tip-card:nth-child(1),.safety-alert:nth-child(1),.info-alert:nth-child(1){animation-delay:0s}
-        .card:nth-child(2),.med-card:nth-child(2),.insight-card:nth-child(2),.tip-card:nth-child(2),.safety-alert:nth-child(2),.info-alert:nth-child(2){animation-delay:.06s}
-        .card:nth-child(3),.med-card:nth-child(3),.insight-card:nth-child(3){animation-delay:.12s}
-        .card:nth-child(4),.med-card:nth-child(4){animation-delay:.18s}
-        .card:nth-child(5){animation-delay:.24s}.card:nth-child(6){animation-delay:.30s}
-        @keyframes cardIn{to{opacity:1;transform:translateY(0)}}
-        @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
-    </style>
-</head>
-<body>
-    <div class="app-container">
-        <header class="app-header">
-            <div class="app-logo"><div class="app-logo-icon"><i class="fas fa-seedling"></i></div><span class="app-logo-text">Florea</span></div>
-            <div class="header-actions"><button class="header-btn" onclick="navigateTo('settings')" aria-label="Config"><i class="fas fa-cog"></i></button></div>
-        </header>
-        <main class="main-content" id="mainContent">
-            <section class="page active" id="page-home">
-                <div id="homeAlerts"></div>
-                <div class="greeting" id="greetingText"></div>
-                <div class="greeting-name" id="greetingName"></div>
-                <div class="card phase-hero" id="phaseHeroCard">
-                    <div class="phase-name" id="phaseName">--</div>
-                    <div class="phase-subtitle" id="phaseSubtitle">--</div>
-                    <div class="phase-stats" id="phaseStats"></div>
-                    <div class="cycle-progress-bar"><div class="cycle-progress-fill" id="cycleProgressFill" style="width:0%"></div></div>
-                </div>
-                <div id="symptomTipsContainer"></div>
-                <div class="card"><div class="card-title">Sintomas de Hoje</div><div id="todaySymptoms" class="symptom-grid"></div><div id="todayNote" style="margin-top:12px;font-size:13px;color:var(--fg-muted);font-style:italic;display:none;"></div></div>
-                <div class="card"><div class="card-title">Proximos 7 dias</div><div id="weekPreview"></div><div class="prediction-badge"><i class="fas fa-info-circle"></i> Baseado no ciclo da pílula</div></div>
-            </section>
-            <section class="page" id="page-calendar">
-                <div class="card">
-                    <div class="calendar-header"><div class="calendar-month" id="calendarMonth"></div><div class="calendar-nav"><button class="calendar-nav-btn" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button><button class="calendar-nav-btn" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button></div></div>
-                    <div class="calendar-weekdays" id="calendarWeekdays"></div>
-                    <div class="calendar-days" id="calendarDays"></div>
-                    <div class="calendar-legend">
-                        <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div> Hoje</div>
-                        <div class="legend-item"><div class="legend-dot" style="background:var(--pink)"></div> Menstruacao</div>
-                        <div class="legend-item"><div class="legend-line"></div> Pausa pílula</div>
-                    </div>
-                </div>
-                <div class="card" id="dayDetailCard" style="display:none"><div class="card-title" id="dayDetailTitle"></div><div id="dayDetailContent"></div></div>
-            </section>
-            <section class="page" id="page-log">
-                <div class="card">
-                    <div class="card-title" id="logDateTitle">Registrar — Hoje</div>
-                    <div style="margin-bottom:16px"><div style="font-size:13px;color:var(--fg-muted);margin-bottom:10px">Voce esta menstruando?</div><div style="display:flex;gap:10px"><button class="intensity-btn" id="logPeriodNo" onclick="togglePeriod(false)">Nao</button><button class="intensity-btn" id="logPeriodYes" onclick="togglePeriod(true)">Sim</button></div></div>
-                    <div id="flowSection" style="display:none;margin-bottom:16px"><div style="font-size:13px;color:var(--fg-muted);margin-bottom:10px">Intensidade</div><div class="intensity-row" style="margin-top:0"><button class="intensity-btn" data-flow="leve" onclick="setFlow('leve')">Leve</button><button class="intensity-btn" data-flow="moderado" onclick="setFlow('moderado')">Moderado</button><button class="intensity-btn" data-flow="intenso" onclick="setFlow('intenso')">Intenso</button></div></div>
-                    <div style="margin-bottom:4px"><div style="font-size:13px;color:var(--fg-muted);margin-bottom:10px">Sintomas</div><div class="symptom-grid" id="logSymptoms"></div></div>
-                    <div style="margin-top:16px"><div style="font-size:13px;color:var(--fg-muted);margin-bottom:10px">Humor</div><div class="intensity-row" style="margin-top:0"><button class="intensity-btn" data-mood="triste" onclick="setMood('triste')"><i class="fas fa-frown"></i></button><button class="intensity-btn" data-mood="neutro" onclick="setMood('neutro')"><i class="fas fa-meh"></i></button><button class="intensity-btn" data-mood="bem" onclick="setMood('bem')"><i class="fas fa-smile"></i></button><button class="intensity-btn" data-mood="otimo" onclick="setMood('otimo')"><i class="fas fa-grin-beam"></i></button></div></div>
-                    <div style="margin-top:16px"><div style="font-size:13px;color:var(--fg-muted);margin-bottom:10px">Nota</div><textarea class="note-input" id="logNote" placeholder="Nota sobre o dia..." maxlength="300"></textarea></div>
-                    <button class="save-btn" onclick="saveLog()"><i class="fas fa-check"></i> Salvar Registro</button>
-                </div>
-            </section>
-            <section class="page" id="page-meds">
-                <div class="card">
-                    <div class="card-title">Remedios de Hoje</div>
-                    <div class="med-progress"><div class="med-progress-bar"><div class="med-progress-fill" id="medProgressFill" style="width:0%"></div></div><div class="med-progress-text" id="medProgressText">0/0</div></div>
-                    <div id="medsList"></div>
-                    <div id="medsEmpty" class="empty-state" style="display:none"><i class="fas fa-pills"></i><p>Nenhum remedio para hoje.<br>Toque no + para adicionar.</p></div>
-                </div>
-                <div class="card"><div class="card-title">Adesao esta semana</div><div class="mini-chart" id="medChart"></div><div style="display:flex;justify-content:space-between;margin-top:6px"><span style="font-size:10px;color:var(--fg-dim)">Seg</span><span style="font-size:10px;color:var(--fg-dim)">Ter</span><span style="font-size:10px;color:var(--fg-dim)">Qua</span><span style="font-size:10px;color:var(--fg-dim)">Qui</span><span style="font-size:10px;color:var(--fg-dim)">Sex</span><span style="font-size:10px;color:var(--fg-dim)">Sab</span><span style="font-size:10px;color:var(--fg-dim)">Dom</span></div></div>
-            </section>
-            <section class="page" id="page-insights">
-                <div class="card"><div class="card-title">Resumo</div><div id="cycleInsights"></div></div>
-                <div class="card"><div class="card-title">Sintomas Frequentes</div><div id="frequentSymptoms"></div></div>
-                <div class="card"><div class="card-title">Historico de Ciclos</div><div id="cycleHistory"></div></div>
-            </section>
-            <section class="page" id="page-settings">
-                <div class="card"><div class="card-title">Perfil</div><div class="settings-item" onclick="openNameModal()"><div class="settings-label"><i class="fas fa-user"></i><span>Seu nome</span></div><div class="settings-value"><span id="settingName">--</span><i class="fas fa-chevron-right" style="font-size:10px"></i></div></div></div>
-                <div class="card">
-                    <div class="card-title">Dados do Ciclo</div>
-                    <div class="settings-item" id="settingCycleItem"><div class="settings-label"><i class="fas fa-ruler"></i><span>Duracao do ciclo</span></div><div class="settings-value"><span id="settingCycleLen">28</span> dias<i class="fas fa-chevron-right" style="font-size:10px"></i></div></div>
-                    <div class="settings-item" id="settingPeriodItem"><div class="settings-label"><i class="fas fa-tint"></i><span>Duracao da menstruacao</span></div><div class="settings-value"><span id="settingPeriodLen">5</span> dias<i class="fas fa-chevron-right" style="font-size:10px"></i></div></div>
-                    <div class="settings-item"><div class="settings-label"><i class="fas fa-calendar-alt"></i><span>Ultima menstruacao</span></div><div class="settings-value"><input type="date" id="settingLastPeriod" class="form-input" style="width:auto;padding:6px 10px;font-size:13px"></div></div>
-                </div>
-                <div class="card">
-                    <div class="card-title">Preferencias</div>
-                    <div class="settings-item"><div class="settings-label"><i class="fas fa-bell"></i><span>Notificacoes</span></div><button class="toggle on" id="toggleNotif" onclick="toggleSetting('notif')"></button></div>
-                    <div class="settings-item"><div class="settings-label"><i class="fas fa-volume-up"></i><span>Alarme sonoro</span></div><button class="toggle on" id="toggleSound" onclick="toggleSetting('sound')"></button></div>
-                    <div class="settings-item"><div class="settings-label"><i class="fas fa-moon"></i><span>Lembrete de remedio</span></div><button class="toggle on" id="toggleMedNotif" onclick="toggleSetting('medNotif')"></button></div>
-                </div>
-                <div class="card"><div class="card-title">Ajuda</div><div class="settings-item" style="cursor:pointer" onclick="openTutorial()"><div class="settings-label"><i class="fas fa-graduation-cap" style="color:var(--accent)"></i><span style="color:var(--accent)">Ver tutorial de configuracao</span></div><div class="settings-value"><i class="fas fa-chevron-right" style="font-size:10px"></i></div></div></div>
-                <div class="card">
-                    <div class="card-title">Dados</div>
-                    <div class="settings-item" style="cursor:pointer" onclick="exportData()"><div class="settings-label"><i class="fas fa-download"></i><span>Exportar dados</span></div><div class="settings-value"><i class="fas fa-chevron-right" style="font-size:10px"></i></div></div>
-                    <div class="settings-item" style="cursor:pointer" onclick="confirmReset()"><div class="settings-label"><i class="fas fa-trash-alt" style="color:var(--accent)"></i><span style="color:var(--accent)">Apagar todos os dados</span></div><div class="settings-value"><i class="fas fa-chevron-right" style="font-size:10px"></i></div></div>
-                </div>
-                <div style="text-align:center;padding:20px 0;color:var(--fg-dim);font-size:12px">Florea v2.0 — Dados salvos apenas neste dispositivo.</div>
-            </section>
-        </main>
-        <button class="fab" id="fab" onclick="handleFab()" aria-label="Adicionar"><i class="fas fa-plus"></i></button>
-        <nav class="bottom-nav" role="navigation">
-            <button class="nav-item active" data-page="home" onclick="navigateTo('home')"><i class="fas fa-home"></i><span>Inicio</span></button>
-            <button class="nav-item" data-page="calendar" onclick="navigateTo('calendar')"><i class="fas fa-calendar"></i><span>Calendario</span></button>
-            <button class="nav-item" data-page="log" onclick="navigateTo('log')"><i class="fas fa-pen"></i><span>Registrar</span></button>
-            <button class="nav-item" data-page="meds" onclick="navigateTo('meds')"><i class="fas fa-pills"></i><span>Remedios</span></button>
-            <button class="nav-item" data-page="insights" onclick="navigateTo('insights')"><i class="fas fa-chart-line"></i><span>Insights</span></button>
-        </nav>
-    </div>
-    <div class="alarm-overlay" id="alarmOverlay"><div class="alarm-icon"><i class="fas fa-bell"></i></div><div class="alarm-title">Hora do remedio!</div><div class="alarm-med-name" id="alarmMedName"></div><div class="alarm-dose" id="alarmMedDose"></div><button class="alarm-dismiss" onclick="dismissAlarm()">Ja tomei</button></div>
-    <div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)"><div class="modal-sheet" id="modalSheet"><div class="modal-handle"></div><div id="modalContent"></div></div></div>
-    <div class="toast-container" id="toastContainer"></div>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#1A1215">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="Florea">
+<meta name="apple-mobile-web-app-title" content="Florea">
+<title>Florea</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=Playfair+Display:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--bg:#1A1215;--bg2:#221B1E;--card:#2A2225;--card2:#312A2D;--fg:#F5EDE8;--fg2:#B0A3A7;--fg3:#6E6266;--ac:#E87461;--ac2:rgba(232,116,97,.12);--ac3:rgba(232,116,97,.25);--pk:#D4729A;--pk2:rgba(212,114,154,.12);--gn:#6BCB8B;--gn2:rgba(107,203,139,.12);--yl:#F0C75E;--yl2:rgba(240,199,94,.12);--bl:#7BA4C9;--bl2:rgba(123,164,201,.12);--pp:#A78BFA;--pp2:rgba(167,139,250,.12);--rd:#E74C3C;--rd2:rgba(231,76,60,.1);--r:16px;--rs:10px;--rx:6px}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--fg);min-height:100dvh;overflow-x:hidden}
+.wrap{max-width:430px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;position:relative}
 
-<script>
-/* ===== BASE DE CONHECIMENTO — CORRIGIDA FARMACOLOGICAMENTE ===== */
-const ST={
-    'cólica':{t:'Dica para cólica menstrual',x:'Contracoes do utero para eliminar o endometrio. Opcoes de alivio:',m:[{n:'Ibuprofeno 400mg',d:'Anti-inflamatório. A cada 8h com alimento. Max 3x/dia.'},{n:'Dipirona 500mg',d:'Analgésico. A cada 6h se necessário. Max 4x/dia.'}],h:['Bolsa de água quente no abdômen','Chá de gengibre com canela','Caminhada leve','Evitar cafeína'],w:'Nao exceda a dose diaria da bula. Consulte seu medico se a dor for muito intensa.',d:'AVISO: Não duplique o Ibuprofeno para dores diferentes. Risco de sobrecarga nos rins e estômago.'},
-    'dor_cabeca':{t:'Dica para dor de cabeça menstrual',x:'Queda de estrogênio na pausa da pílula pode causar dor de cabeça:',m:[{n:'Paracetamol 750mg',d:'Analgésico. A cada 8h. Max 4x/dia (3g/dia).'},  {n:'Ibuprofeno 400mg',d:'Anti-inflamatório para dor moderada. A cada 8h. Max 3x/dia.'}],h:['Ambiente escuro e silencioso','Comprimir frio na testa e nuca','Chá de camomila ou hortelã','Hidratar-se bem (pelo menos 2L de água)'],w:'',d:'AVISO: Não duplique o Ibuprofeno para dores diferentes. Risco de sobrecarga nos rins e estômago.',aura:'IMPORTANTE — Enxaqueca com aura: Se a dor de cabeça vier acompanhada de pontos brilhantes na visão, flashes de luz, tontura ou formigamento, NÃO tome pílulas com estrogênio (como o Ciclo 21). Suspenda o uso e consulte um médico ou neurologista imediatamente. O Sumatriptano é contraindicado nesse caso pelo risco de AVC.'},
-    'inchaço':{t:'Dica para inchaço',x:'Retenção de líquidos comum na pausa da pílula:',m:[{n:'Chá de cavalinha',d:'Diurético natural. 2-3 xícaras ao dia.'}],h:['Reduzir consumo de sal','Beber muita água','Alimentos ricos em potássio: banana, abacate','Evitar refrigerante e embutidos','Elevar as pernas ao descansar'],w:'Se o inchaço for excessivo e persistente, consulte um médico.'},
-    'fadiga':{t:'Dica para fadiga',x:'Queda hormonal na pausa pode causar cansaço:',m:[],h:['Priorizar sono de qualidade (7-8h)','Alimentos ricos em ferro: carne vermelha, espinafre, feijão','Vitamina C ajuda na absorção do ferro','Evitar açúcar em excesso (pico e queda de energia)','Pausas curtas para caminhadas leves'],w:'Se a fadiga for muito intensa, faça exame de hemoglobina/ferro.'},
-    'ansiedade':{t:'Dica para ansiedade na pausa',x:'Flutuações hormonais na pausa da pílula podem intensificar a ansiedade:',m:[{n:'Chá de valeriana ou passiflora',d:'Calmantes naturais. Tomar antes de dormir.'},{n:'Magnésio quelato',d:'Suplemento que ajuda a reduzir ansiedade. 200-400mg/dia.'}],h:['Exercícios de respiração (4-7-8: inspirar 4s, segurar 7s, expirar 8s)','Meditação guiada (5 min já ajuda)','Reduzir consumo de cafeína','Escrever em um diário o que está sentindo','Técnicas de grounding: nomeie 5 coisas que vê, 4 que toca, 3 que ouve'],w:'Se a ansiedade interfere nas atividades diárias, procure ajuda profissional.'},
-    'insônia':{t:'Dica para insônia',x:'A queda de hormônios na pausa pode dificultar o sono:',m:[{n:'Melatonina 0,5-1mg',d:'Tomar 30-60 min antes de dormir.'},{n:'Chá de camomila',d:'Calmante natural. 1h antes de dormir.'}],h:['Manter horário fixo para dormir e acordar','Evitar telas 1h antes de dormir','Ambiente escuro e fresco','Banho morno antes de deitar','Evitar cafeína depois das 14h'],w:'Uso contínuo de melatonina deve ser orientado por médico.'},
-    'acne':{t:'Dica para acne menstrual',x:'O aumento de andrógenos antes da pausa estimula a oleosidade:',m:[{n:'Ácido salicílico 2%',d:'Aplicar nas áreas com acne. Não esfregar.'},{n:'Peróxido de benzoíla 5%',d:'Tratamento local. Pode ressecar a pele.'}],h:['Lavar o rosto 2x ao dia com sabonete suave','Não espremer as espinhas (causa cicatrizes)','Trocar fronha do travesseiro frequentemente','Dieta com menos lactose e açúcar refinado','Protetor solar oil-free diariamente'],w:'Se a acne for severa e cicatrizante, consulte um dermatologista.'},
-    'enjoo':{t:'Dica para enjoo/náusea',x:'A prostaglandina liberada durante a menstruação pode causar náuseas:',m:[{n:'Dimenidrinato (Dramin) 50mg',d:'Antiemético. Tomar 30min antes se previsto.'}],h:['Gengibre em chá ou cristalizado (muito eficaz)','Comer pequenas porções frequentes','Evitar alimentos gordurosos e muito temperados','Cheirar limão ou hortelã','Sentar-se ereta após comer'],w:'Se vômitos forem frequentes e impossibilitarem alimentação, procure um médico.'},
-    'dor_costas':{t:'Dica para dor nas costas',x:'A dor lombar menstrual tem causa similar à cólica (contrações que irradiam):',m:[{n:'Ibuprofeno 400mg',d:'Anti-inflamatório. Com alimento a cada 8h. Max 3x/dia.'}],h:['Bolsa de água quente na região lombar','Alongamento suave: posição criança, gato-vaca','Massagem na região com óleo essencial de lavanda','Evitar ficar muito tempo sentada','Postura consciente durante o dia'],w:'Se a dor nas costas for muito forte ou irradiar para as pernas, procure um médico.'},
-    'seios':{t:'Dica para dor nos seios (mastalgia)',x:'A sensibilidade nos seios é causada pela queda de estrogênio e progesterona na pausa:',m:[],h:['Soutien com suporte adequado (inclusive para dormir)','Compressa quente ou fria (teste qual alivia mais)','Reduzir cafeína e chocolate','Vitamina E (400 UI/dia) pode ajudar','Evitar impacto nas atividades físicas'],w:'Se sentir nódulos ou dor localizada persistente, faça exame clínico e mamografia.'},
-    'apetite':{t:'Dica para fome excessiva',x:'O aumento de progesterona e a queda de serotonina podem aumentar o apetite na pausa:',m:[],h:['Fazer refeições ricas em proteína e fibras','Mastigar devagar (a saciedade demora 20 min)','Beber água antes das refeições','Tentar não ter doces e ultraprocessados em casa','Lanchinhos saudáveis: mix de castanhas, fruta com pasta de amendoim'],w:'Compulsão alimentar severa pode ser sinal de TCA. Procure ajuda se necessário.'},
-    'libido':{t:'Sobre libido alta',x:'Variação hormonal natural durante a pausa da pílula. Quem toma anticoncepcional corretamente não ovula — a libido alta neste caso é apenas uma variação hormonal normal, sem relação com fertilidade.',m:[],h:['É uma variação hormonal natural e esperada','Converse com seu parceiro(a) sobre suas necessidades','Autoconhecimento e cuidados com a saúde sexual são importantes'],w:'Use proteção se não deseja engravidar. Consulte um ginecologista regularmente.'}
-};
+/* Header */
+.hd{padding:16px 20px 0;display:flex;justify-content:space-between;align-items:center}
+.hd-logo{display:flex;align-items:center;gap:9px}
+.hd-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--ac),var(--pk));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff}
+.hd-text{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--fg)}
+.hd-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--fg3);background:var(--bg2);color:var(--fg3);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px}
+.hd-btn:active{transform:scale(.92)}
 
-const SYM=[{id:'dor_cabeca',l:'Dor de cabeça',i:'fa-head-side-virus'},{id:'cólica',l:'Cólica',i:'fa-bolt'},{id:'inchaço',l:'Inchaço',i:'fa-droplet'},{id:'acne',l:'Acne',i:'fa-face-frown'},{id:'fadiga',l:'Fadiga',i:'fa-battery-quarter'},{id:'dor_costas',l:'Dor costas',i:'fa-person'},{id:'seios',l:'Dor seios',i:'fa-heart-pulse'},{id:'enjoo',l:'Enjoo',i:'fa-dizzy'},{id:'insônia',l:'Insônia',i:'fa-moon'},{id:'apetite',l:'Fome exagerada',i:'fa-utensils'},{id:'ansiedade',l:'Ansiedade',i:'fa-brain'},{id:'libido',l:'Libido alta',i:'fa-fire'}];
-const MOODS={'triste':{l:'Triste',i:'fa-frown',c:'var(--blue)'},'neutro':{l:'Neutro',i:'fa-meh',c:'var(--fg-muted)'},'bem':{l:'Bem',i:'fa-smile',c:'var(--yellow)'},'ótimo':{l:'Ótimo',i:'fa-grin-beam',c:'var(--green)'}};
-const MESES=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-const DIAS_SEMANA=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-const MC=['var(--accent)','var(--green)','var(--blue)','var(--yellow)','var(--pink)'];
-const DIAS_SEMANA_CURTO={dom:'Dom',seg:'Seg',ter:'Ter',qua:'Qua',qui:'Qui',sex:'Sex',sab:'Sáb'};
+/* Container de páginas */
+.cnt{flex:1;padding:16px 20px 100px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.pg{display:none;animation:pgIn .25s ease}.pg.on{display:block}
+@keyframes pgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-let state=loadState(),currentPage='home',calendarDate=new Date(),selectedDate=dateKey(new Date());
-let logPeriod=false,logFlow='',logSymptomsArr=[],logMood='',selectedMedColor=0,alarmAudioCtx=null,alarmPlaying=false,tutStep=0;
+/* Cards genéricos */
+.c{background:var(--card);border-radius:var(--r);padding:18px;margin-bottom:12px;border:1px solid rgba(255,255,255,.03)}
+.c-t{font-size:11px;font-weight:600;color:var(--fg3);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:14px}
 
-function loadState(){try{const s=localStorage.getItem('florea_v5');if(s)return JSON.parse(s);}catch(e){}
-return{userName:'',cycleLength:28,periodLength:5,lastPeriodStart:dateKey(new Date()),logs:{},medications:[{id:'med1',name:'Anticoncepcional (Ciclo 21)',dose:'1 comprimido',time:'22:00',color:0,schedule:['seg','ter','qua','qui','sex','sab','dom'],takeDays:21,pauseDays:7,startDate:dateKey(new Date())}],medTaken:{},settings:{notif:true,sound:true,medNotif:true},tutorialSeen:false};}
-function saveState(){try{localStorage.setItem('florea_v5',JSON.stringify(state));}catch(e){}}
-function dateKey(d){const dt=new Date(d);return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;}
-function getDaysAgo(n){const d=new Date();d.setDate(d.getDate()-n);return d;}
-function getTodayDOW(){return['dom','seg','ter','qua','qui','sex','sab'][new Date().getDay()];}
-function getGreeting(){const h=new Date().getHours();return h<12?'Bom dia':h<18?'Boa tarde':'Boa noite';}
+/* Hero */
+.hero{background:linear-gradient(135deg,var(--card),var(--ac2));border:1px solid var(--ac3);position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;top:-40%;right:-25%;width:160px;height:160px;background:radial-gradient(circle,var(--ac3),transparent 70%);pointer-events:none}
+.hero-phase{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;position:relative;line-height:1.2}
+.hero-sub{font-size:13px;color:var(--fg2);font-weight:300;margin-top:4px;position:relative}
+.hero-row{display:flex;gap:10px;margin-top:16px;position:relative}
+.hero-stat{flex:1;background:rgba(0,0,0,.2);border-radius:var(--rs);padding:10px 6px;text-align:center}
+.hero-sv{font-size:22px;font-weight:800;color:var(--ac)}
+.hero-sl{font-size:9px;color:var(--fg3);margin-top:1px;text-transform:uppercase;letter-spacing:.5px}
+.hero-bar{height:4px;background:rgba(255,255,255,.05);border-radius:2px;margin-top:14px;overflow:hidden}
+.hero-fill{height:100%;background:linear-gradient(90deg,var(--ac),var(--pk));border-radius:2px;transition:width .6s}
 
-/* ===== LÓGICA CENTRAL DO CICLO DA PÍLULA ===== */
-function getMedCycleInfo(med){
-    if(!med.takeDays||med.takeDays<=0||!med.startDate)return null;
-    const start=new Date(med.startDate+'T12:00:00'),today=new Date();
-    today.setHours(12,0,0,0);start.setHours(12,0,0,0);
-    const total=med.takeDays+med.pauseDays,diff=Math.floor((today-start)/864e5);
-    if(diff<0)return{dayInCycle:1,isTaking:true,daysLeft:med.takeDays,totalCycle:total,nextCartelaDate:addDays(start,med.takeDays)};
-    const dc=(diff%total)+1,isT=dc<=med.takeDays;
-    const dl=isT?(med.takeDays-dc+1):(total-dc+1);
-    // Calcular próxima cartela
-    const currentCycleStart=addDays(start,Math.floor(diff/total)*total);
-    const nextCartela=addDays(currentCycleStart,med.takeDays);
-    return{dayInCycle:dc,isTaking:isT,daysLeft:dl,totalCycle:total,nextCartelaDate:nextCartela};
-}
-function getMedCycleInfoForDate(med,ds){
-    if(!med.takeDays||med.takeDays<=0||!med.startDate)return null;
-    const start=new Date(med.startDate+'T12:00:00'),check=new Date(ds+'T12:00:00');
-    start.setHours(12,0,0,0);check.setHours(12,0,0,0);
-    const total=med.takeDays+med.pauseDays,diff=Math.floor((check-start)/864e5);
-    if(diff<0)return{dayInCycle:1,isTaking:true,totalCycle:total};
-    const dc=(diff%total)+1;return{dayInCycle:dc,isTaking:dc<=med.takeDays,totalCycle:total};
-}
-function shouldTakeToday(med){if(med.takeDays&&med.takeDays>0){const info=getMedCycleInfo(med);if(!info||!info.isTaking)return false;}return med.schedule.includes(getTodayDOW());}
-function isMedPauseDay(med,ds){if(!med.takeDays||med.takeDays<=0||!med.startDate)return false;const info=getMedCycleInfoForDate(med,ds);return info&&!info.isTaking&&med.schedule.includes(['dom','seg','ter','qua','qui','sex','sab'][new Date(ds+'T12:00:00').getDay()]);}
-function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
-function formatDateExt(d){return `${d.getDate()} de ${MESES[d.getMonth()]} de ${d.getFullYear()}`;}
-function formatDateShort(d){return `${d.getDate()}/${d.getMonth()+1}`;}
-function getDOWName(d){return DIAS_SEMANA[d.getDay()];}
+/* Medicamento strip */
+.med-strip{display:flex;gap:6px;margin-bottom:12px}
+.msi{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px 8px;border-radius:var(--rs);background:var(--card);border:1px solid rgba(255,255,255,.03);transition:.2s;position:relative;min-height:72px}
+.msi.done{border-color:rgba(107,203,139,.25);background:var(--gn2)}
+.msi.done .ms-c{color:var(--gn);opacity:1}
+.ms-n{font-size:9px;font-weight:600;color:var(--fg2);text-align:center;line-height:1.2;max-width:100%;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.ms-t{font-size:9px;color:var(--fg3)}
+.ms-c{font-size:16px;color:var(--fg3);opacity:.2;transition:.3s}
+.ms-b{position:absolute;inset:0;border:none;background:transparent;cursor:pointer;border-radius:var(--rs);z-index:2}
 
-/* ===== ENCONTRAR MEDICAMENTO COM CICLO (pílula) ===== */
-function getPillMed(){return state.medications.find(m=>m.takeDays&&m.takeDays>0&&m.pauseDays&&m.pauseDays>0)||null;}
+/* Mini semana */
+.wk-mini{display:flex;gap:4px}
+.wk-d{flex:1;text-align:center}
+.wk-dn{font-size:9px;color:var(--fg3);font-weight:500;padding:2px 0}
+.wk-dd{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;margin:2px auto 0;color:var(--fg2)}
+.wk-dd.today{background:var(--ac);color:#fff;font-weight:700}
+.wk-dd.menstr{background:var(--pk2);color:var(--pk)}
+.wk-dd.pause{border:1.5px dashed rgba(240,199,94,.3);color:var(--yl)}
 
-/* ===== ALARME ===== */
-function playAlarmSound(){if(alarmPlaying)return;alarmPlaying=true;try{alarmAudioCtx=new(window.AudioContext||window.webkitAudioContext)();const notes=[523.25,659.25,783.99,1046.50];let ni=0,rc=0;function pn(){if(!alarmPlaying||rc>6){stopAlarmSound();return;}const o=alarmAudioCtx.createOscillator(),g=alarmAudioCtx.createGain();o.connect(g);g.connect(alarmAudioCtx.destination);o.type='sine';o.frequency.setValueAtTime(notes[ni%notes.length],alarmAudioCtx.currentTime);g.gain.setValueAtTime(0.3,alarmAudioCtx.currentTime);g.gain.exponentialRampToValueAtTime(0.01,alarmAudioCtx.currentTime+0.4);o.start(alarmAudioCtx.currentTime);o.stop(alarmAudioCtx.currentTime+0.4);ni++;if(ni%notes.length===0){ni=0;rc++;}setTimeout(pn,350);}pn();}catch(e){alarmPlaying=false;}}
-function stopAlarmSound(){alarmPlaying=false;try{if(alarmAudioCtx)alarmAudioCtx.close();}catch(e){}alarmAudioCtx=null;}
-function dismissAlarm(){stopAlarmSound();document.getElementById('alarmOverlay').classList.remove('show');}
-function triggerAlarm(med){document.getElementById('alarmMedName').textContent=med.name;document.getElementById('alarmMedDose').textContent=`${med.dose} — ${med.time}`;document.getElementById('alarmOverlay').classList.add('show');if(state.settings.sound)playAlarmSound();}
+/* Sintomas */
+.sym-row{display:flex;flex-wrap:wrap;gap:6px}
+.sc{display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border-radius:20px;font-size:11px;font-weight:500;background:rgba(255,255,255,.03);color:var(--fg3);border:1px solid rgba(255,255,255,.04);cursor:pointer;transition:.2s}
+.sc.on{background:var(--ac2);color:var(--ac);border-color:var(--ac3)}
+.sc i{font-size:11px}
 
-/* ===== NAVEGAÇÃO ===== */
-function navigateTo(page){currentPage=page;document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(`page-${page}`).classList.add('active');document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));const nb=document.querySelector(`.nav-item[data-page="${page}"]`);if(nb)nb.classList.add('active');document.getElementById('fab').style.display=page==='meds'?'flex':'none';if(page==='home')renderHome();if(page==='calendar')renderCalendar();if(page==='log')renderLog();if(page==='meds')renderMeds();if(page==='insights')renderInsights();if(page==='settings')renderSettings();document.getElementById('mainContent').scrollTop=0;}
-function handleFab(){if(currentPage==='meds')openAddMedModal();}
+/* Dica do dia */
+.tip-d{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:var(--rx);padding:10px 12px;margin-top:10px}
+.tip-h{font-size:10px;font-weight:600;color:var(--fg3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.tip-h i{color:var(--ac);font-size:9px}
+.tip-x{font-size:11px;color:var(--fg3);line-height:1.5}
+.tip-m{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--gn);margin-top:4px}
+.tip-w{font-size:10px;color:var(--yl);display:flex;align-items:flex-start;gap:5px;margin-top:6px;line-height:1.4}
+.tip-w i{flex-shrink:0;margin-top:2px;font-size:9px}
 
-/* ===== RENDER: HOME — LÓGICA CORRIGIDA ===== */
-function renderHome(){
-    const n=state.userName||'';
-    document.getElementById('greetingText').textContent=getGreeting()+(n?',':'!');
-    document.getElementById('greetingName').textContent=n||'Bem-vinda ao Florea';
+/* Calendário */
+.cal-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.cal-mo{font-family:'Playfair Display',serif;font-size:18px;font-weight:700}
+.cal-nav{display:flex;gap:4px}
+.cal-nb{width:30px;height:30px;border-radius:50%;border:1px solid var(--fg3);background:transparent;color:var(--fg3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px}
+.cal-nb:active{border-color:var(--ac);color:var(--ac)}
+.cal-wk{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:6px}
+.cal-wd{text-align:center;font-size:10px;color:var(--fg3);font-weight:500;padding:4px 0}
+.cal-ds{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cd{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:13px;cursor:pointer;transition:.15s;position:relative;color:var(--fg2)}
+.cd:active{transform:scale(.9)}
+.cd.om{color:var(--fg3);opacity:.25;pointer-events:none}
+.cd.td{background:var(--ac);color:#fff;font-weight:700}
+.cd.pm{background:var(--pk2);color:var(--pk);font-weight:600}
+.cd.pm.td{background:var(--ac);color:#fff}
+.cd.lm::after{content:'';position:absolute;bottom:2px;width:4px;height:4px;border-radius:50%;background:var(--ac)}
+.cd.lm.td::after{background:#fff}
+.cd.mp{border:1.5px dashed rgba(240,199,94,.3)}
+.cd.mp.td{border:none}
+.cd.sel{outline:2px solid var(--ac);outline-offset:1px}
+.cal-leg{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+.cal-li{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--fg3)}
+.cal-ld{width:7px;height:7px;border-radius:50%}
+.cal-ll{width:10px;border-top:1.5px dashed var(--yl);opacity:.5}
 
-    const alertsDiv=document.getElementById('homeAlerts');
-    const pillMed=getPillMed();
-    let alertsHTML='';
+/* Logs rápidos */
+.lr{display:flex;gap:8px;margin-bottom:12px}
+.lb{flex:1;padding:10px;border-radius:var(--rx);border:1px solid rgba(255,255,255,.05);background:transparent;color:var(--fg3);cursor:pointer;transition:.2s;font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;text-align:center}
+.lb.og{border-color:var(--gn);background:var(--gn2);color:var(--gn)}
+.lb.ya{border-color:var(--yl);background:var(--yl2);color:var(--yl)}
+.lb.aa{border-color:var(--ac);background:var(--ac2);color:var(--ac)}
+.lb.bl{border-color:var(--bl);background:var(--bl2);color:var(--bl)}
 
-    if(pillMed){
-        const info=getMedCycleInfo(pillMed);
-        if(info&&!info.isTaking){
-            // Na pausa — mostrar aviso de reiniciar cartela
-            const nextDate=info.nextCartelaDate;
-            alertsHTML+=`<div class="info-alert"><i class="fas fa-exclamation-triangle"></i><div class="info-alert-text"><strong>Sua próxima cartela deve começar rigorosamente em ${formatDateExt(nextDate)} (${getDOWName(nextDate)}), mesmo que você ainda esteja menstruada.</strong> Nunca espere a menstruação acabar para iniciar a nova cartela — isso compromete a eficácia do anticoncepcional.</div></div>`;
-        }
-    }
-    alertsDiv.innerHTML=alertsHTML;
+/* Input de texto (nota) — era .ni conflitante, agora .nt */
+.nt{width:100%;background:rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.04);border-radius:var(--rx);padding:10px;color:var(--fg);font-family:'Outfit',sans-serif;font-size:13px;outline:none;transition:border .2s;min-height:50px;resize:none}
+.nt:focus{border-color:var(--ac3)}.nt::placeholder{color:var(--fg3)}
 
-    // Estatísticas principais — baseadas na pílula, não no ciclo natural
-    const statsDiv=document.getElementById('phaseStats');
-    const heroCard=document.getElementById('phaseHeroCard');
+/* Botões */
+.bp{width:100%;padding:13px;border:none;border-radius:var(--rs);background:linear-gradient(135deg,var(--ac),var(--pk));color:#fff;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:.2s;margin-top:14px}
+.bp:active{transform:scale(.97)}
+.bo{background:transparent;border:1px solid var(--fg3);color:var(--fg3);margin-top:8px}
+.bd{background:linear-gradient(135deg,#c0392b,#e74c3c)}
 
-    if(pillMed){
-        const info=getMedCycleInfo(pillMed);
-        if(info){
-            if(info.isTaking){
-                document.getElementById('phaseName').textContent='Tomando a pílula';
-                document.getElementById('phaseName').style.color='var(--green)';
-                document.getElementById('phaseSubtitle').textContent=`Dia ${info.dayInCycle} de ${info.takeDays} da cartela`;
-                statsDiv.innerHTML=`
-                    <div class="phase-stat"><div class="phase-stat-value" style="color:var(--green)">${info.dayInCycle}</div><div class="phase-stat-label">Dia da cartela</div></div>
-                    <div class="phase-stat"><div class="phase-stat-value" style="color:var(--yellow)">${info.daysLeft}</div><div class="phase-stat-label">Dias para pausa</div></div>
-                    <div class="phase-stat"><div class="phase-stat-value">${info.totalCycle}</div><div class="phase-stat-label">Ciclo total</div></div>`;
-                document.getElementById('cycleProgressFill').style.width=((info.dayInCycle-1)/info.takeDays*100)+'%';
-            } else {
-                document.getElementById('phaseName').textContent='Pausa da pílula';
-                document.getElementById('phaseName').style.color='var(--yellow)';
-                document.getElementById('phaseSubtitle').textContent=`Dia ${info.dayInCycle-info.takeDays} de ${info.pauseDays} da pausa`;
-                statsDiv.innerHTML=`
-                    <div class="phase-stat"><div class="phase-stat-value" style="color:var(--yellow)">${info.dayInCycle-info.takeDays}</div><div class="phase-stat-label">Dia da pausa</div></div>
-                    <div class="phase-stat"><div class="phase-stat-value" style="color:var(--green)">${info.daysLeft}</div><div class="phase-stat-label">Dias p/ nova cartela</div></div>
-                    <div class="phase-stat"><div class="phase-stat-value">${info.totalCycle}</div><div class="phase-stat-label">Ciclo total</div></div>`;
-                document.getElementById('cycleProgressFill').style.width=((info.dayInCycle-info.takeDays-1)/info.pauseDays*100)+'%';
-            }
-        }
-    } else {
-        // Sem pílula com ciclo — mostrar ciclo natural
-        heroCard.style.display='';
-        const cd=getNaturalCycleDay();const du=state.cycleLength-cd;
-        document.getElementById('phaseName').textContent='Ciclo natural';document.getElementById('phaseName').style.color='var(--accent)';
-        document.getElementById('phaseSubtitle').textContent=`Dia ${cd} do seu ciclo`;
-        statsDiv.innerHTML=`
-            <div class="phase-stat"><div class="phase-stat-value">${cd}</div><div class="phase-stat-label">Dia do ciclo</div></div>
-            <div class="phase-stat"><div class="phase-stat-value">${du}</div><div class="phase-stat-label">Dias até menstr.</div></div>
-            <div class="phase-stat"><div class="phase-stat-value">${state.cycleLength}</div><div class="phase-stat-label">Dias de ciclo</div></div>`;
-        document.getElementById('cycleProgressFill').style.width=((cd-1)/state.cycleLength*100)+'%';
-    }
+/* Medicação card */
+.mc{background:var(--card);border-radius:var(--r);border:1px solid rgba(255,255,255,.03);margin-bottom:8px;overflow:hidden;transition:.15s}
+.mc:active{transform:scale(.985)}
+.mc-t{display:flex;align-items:center;gap:12px;padding:14px}
+.mc-i{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.mc-f{flex:1;min-width:0}.mc-n{font-weight:600;font-size:14px;line-height:1.3}.mc-d{font-size:11px;color:var(--fg3);margin-top:1px}
+.mc-time{font-size:11px;color:var(--fg3);opacity:.7;margin-top:1px}
+.mb{display:inline-flex;align-items:center;gap:3px;font-size:9px;padding:2px 7px;border-radius:8px;margin-top:3px;font-weight:600}
+.mb.ct{background:var(--pp2);color:var(--pp)}.mb.cy{background:var(--yl2);color:var(--yl)}
+.ma{display:flex;gap:4px;align-items:center;flex-shrink:0}
+.ab{width:28px;height:28px;border-radius:50%;border:none;background:transparent;color:var(--fg3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;transition:.15s}
+.ab:active{transform:scale(.85)}.ab.ed:hover{color:var(--bl)}.ab.dl:hover{color:var(--rd)}
 
-    // Sintomas de hoje
-    const tk=dateKey(new Date()),tl=state.logs[tk],sc=document.getElementById('todaySymptoms'),ne=document.getElementById('todayNote');
-    if(tl){sc.innerHTML=SYM.filter(s=>tl.symptoms&&tl.symptoms.includes(s.id)).map(s=>`<div class="symptom-btn active" style="cursor:default"><i class="fas ${s.i}"></i>${s.l}</div>`).join('')||'<div style="color:var(--fg-dim);font-size:13px;grid-column:1/-1">Nenhum sintoma hoje.</div>';ne.style.display=tl.note?'block':'none';ne.textContent=`"${tl.note}"`;}
-    else{sc.innerHTML='<div style="color:var(--fg-dim);font-size:13px;grid-column:1/-1">Nenhum registro hoje.</div>';ne.style.display='none';}
+/* Check mark */
+.mk{width:32px;height:32px;border-radius:50%;border:2px solid var(--fg3);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:transparent;transition:.3s;font-size:13px;flex-shrink:0}
+.mk.tk{border-color:var(--gn);background:var(--gn);color:#fff;animation:pop .3s ease}
+@keyframes pop{0%{transform:scale(.5)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
 
-    renderSymptomTips(tl);
+/* Ciclo visual */
+.mcy{padding:0 14px 12px}
+.cy-lb{display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px}
+.cy-lt{color:var(--gn)}.cy-lp{color:var(--yl)}
+.cy-tk{height:6px;border-radius:3px;overflow:hidden;display:flex;background:rgba(255,255,255,.03);position:relative}
+.cy-tf{background:var(--gn);transition:width .5s;border-radius:3px 0 0 3px}.cy-tf.act{box-shadow:0 0 6px rgba(107,203,139,.3)}
+.cy-tp{background:var(--yl2);transition:width .5s;border-radius:0 3px 3px 0}.cy-tp.act{background:var(--yl);box-shadow:0 0 6px rgba(240,199,94,.3)}
+.cy-dot{width:10px;height:10px;background:var(--fg);border:2px solid var(--card);border-radius:50%;position:absolute;top:-2px;transform:translateX(-50%);z-index:2;box-shadow:0 0 4px rgba(0,0,0,.5)}
+.cy-i{display:flex;justify-content:space-between;align-items:center;margin-top:5px}
+.cy-s{font-size:10px;font-weight:600;padding:2px 7px;border-radius:8px}
+.cy-s.tk{background:var(--gn2);color:var(--gn)}.cy-s.ps{background:var(--yl2);color:var(--yl)}
+.cy-dl{font-size:10px;color:var(--fg3)}
+.cy-ct{background:var(--pp2);color:var(--pp);font-size:10px;font-weight:600;padding:2px 7px;display:inline-block}
 
-    // Próximos 7 dias — sem "fase fértil" se usa pílula
-    const wd=document.getElementById('weekPreview');let wh='';const today=new Date();
-    for(let i=0;i<7;i++){const d=new Date(today);d.setDate(d.getDate()+i);const k=dateKey(d);
-    const isP=state.logs[k]&&state.logs[k].period;
-    const isPause=pillMed?isMedPauseDay(pillMed,k):false;
-    const isNextCartela=pillMed&&getMedCycleInfoForDate(pillMed,k)&&getMedCycleInfoForDate(pillMed,k).isTaking&&i>0&&!getMedCycleInfoForDate(pillMed,addDays(d,-1)).isTaking;
-    const dn=i===0?'Hoje':DIAS_SEMANA[d.getDay()];let ind='',ic='transparent';
-    if(isNextCartela){ind='Iniciar cartela';ic='var(--green)';}
-    else if(isP){ind='Menstruação';ic='var(--pink)';}
-    else if(isPause){ind='Pausa pílula';ic='var(--yellow)';}
-    wh+=`<div style="display:flex;align-items:center;gap:12px;padding:10px 0;${i<6?'border-bottom:1px solid rgba(255,255,255,0.04);':''}"><div style="width:48px;text-align:center"><div style="font-size:11px;color:var(--fg-dim)">${dn}</div><div style="font-size:18px;font-weight:600;${i===0?'color:var(--accent);':''}">${d.getDate()}</div></div><div style="width:8px;height:8px;border-radius:50%;background:${ic};flex-shrink:0"></div><div style="font-size:13px;color:${ic==='transparent'?'var(--fg-dim)':ic}">${ind||'—'}</div></div>`;}
-    wd.innerHTML=wh;
-}
+/* Progresso */
+.pr{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.pr-b{flex:1;height:3px;background:rgba(255,255,255,.04);border-radius:2px;overflow:hidden}
+.pr-f{height:100%;background:var(--gn);border-radius:2px;transition:width .5s}
+.pr-t{font-size:11px;color:var(--fg3);white-space:nowrap}
 
-function getNaturalCycleDay(){const l=new Date(state.lastPeriodStart+'T12:00:00'),t=new Date();t.setHours(12,0,0,0);l.setHours(12,0,0,0);return Math.max(1,(Math.floor((t-l)/864e5)%state.cycleLength)+1);}
+/* Chart barras */
+.ch{display:flex;align-items:flex-end;gap:3px;height:50px}
+.cb{flex:1;border-radius:2px 2px 0 0;min-height:3px;transition:height .5s}
 
-/* ===== DICAS DE SINTOMAS — COM ALERTAS DE SEGURANÇA ===== */
-function renderSymptomTips(log){const c=document.getElementById('symptomTipsContainer');if(!log||!log.symptoms||!log.symptoms.length){c.innerHTML='';return;}let h='';
-log.symptoms.forEach(sid=>{const tip=ST[sid];if(!tip)return;const sym=SYM.find(s=>s.id===sid);if(!sym)return;
-h+=`<div class="tip-card"><div class="tip-header"><i class="fas fa-lightbulb"></i><span>${tip.t}</span></div><div class="tip-body">${tip.x}</div>`;
-if(tip.m.length)h+=`<div class="tip-meds">${tip.m.map(m=>`<div class="tip-med-item"><i class="fas fa-capsules"></i><div><span class="tip-med-name">${m.n}</span><br><span class="tip-med-desc">${m.d}</span></div></div>`).join('')}</div>`;
-if(tip.h.length)h+=`<div style="margin-top:10px;font-size:12px;color:var(--fg-muted);margin-bottom:4px;font-weight:500">Remédios caseiros:</div>`+tip.h.map(hh=>`<div style="font-size:12px;color:var(--fg-dim);padding:3px 0;padding-left:16px;position:relative"><span style="position:absolute;left:0">•</span>${hh}</div>`).join('');
-// Aviso de superdosagem
-if(tip.d)h+=`<div class="tip-danger"><i class="fas fa-exclamation-triangle"></i><span>${tip.d}</span></div>`;
-// Alerta de aura para dor de cabeça
-if(tip.aura)h+=`<div class="safety-alert" style="margin-top:8px;padding:12px"><i class="fas fa-skull-crossbones"></i><div class="safety-alert-text" style="font-size:12px">${tip.aura}</div></div>`;
-if(tip.w)h+=`<div class="tip-warning"><i class="fas fa-exclamation-triangle"></i><span>${tip.w}</span></div>`;
-h+=`</div>`;});c.innerHTML=h;}
+/* Insight header */
+.ih{font-size:11px;font-weight:600;color:var(--fg3);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.ih i{font-size:12px}
 
-/* ===== CALENDÁRIO ===== */
-function renderCalendar(){const y=calendarDate.getFullYear(),m=calendarDate.getMonth();document.getElementById('calendarMonth').textContent=`${MESES[m]} ${y}`;document.getElementById('calendarWeekdays').innerHTML=DIAS_SEMANA.map(d=>`<div class="calendar-weekday">${d}</div>`).join('');const fd=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),dip=new Date(y,m,0).getDate(),ts=dateKey(new Date());let dh='';
-for(let i=fd-1;i>=0;i--){const day=dip-i;const d=new Date(y,m-1,day);dh+=`<div class="calendar-day other-month" onclick="selectCalendarDay('${dateKey(d)}')">${day}</div>`;}
-for(let day=1;day<=dim;day++){const d=new Date(y,m,day);const k=dateKey(d);let c='calendar-day';if(k===ts)c+=' today';if(state.logs[k]&&state.logs[k].period)c+=' predicted-menstruation';if(k===selectedDate)c+=' selected';
-let isPause=false;state.medications.forEach(med=>{if(isMedPauseDay(med,k))isPause=true;});if(isPause&&!state.logs[k]?.period)c+=' med-pause-day';
-dh+=`<div class="${c}" onclick="selectCalendarDay('${k}')">${day}</div>`;}
-const tot=fd+dim,rem=(7-(tot%7))%7;for(let i=1;i<=rem;i++){const d=new Date(y,m+1,i);dh+=`<div class="calendar-day other-month" onclick="selectCalendarDay('${dateKey(d)}')">${i}</div>`;}
-document.getElementById('calendarDays').innerHTML=dh;renderDayDetail();}
-function changeMonth(d){calendarDate.setMonth(calendarDate.getMonth()+d);renderCalendar();}
-function selectCalendarDay(k){selectedDate=k;renderCalendar();}
-function renderDayDetail(){const card=document.getElementById('dayDetailCard'),log=state.logs[selectedDate];if(!log){card.style.display='none';return;}card.style.display='block';const p=selectedDate.split('-'),d=new Date(+p[0],+p[1]-1,+p[2]);document.getElementById('dayDetailTitle').textContent=`${d.getDate()} de ${MESES[d.getMonth()]}`;let h='';if(log.period)h+=`<div style="margin-bottom:10px"><span style="display:inline-flex;align-items:center;gap:6px;background:var(--pink-soft);color:var(--pink);padding:4px 10px;border-radius:20px;font-size:12px"><i class="fas fa-tint"></i> Menstruação — ${log.flow||'não informado'}</span></div>`;if(log.symptoms&&log.symptoms.length)h+=`<div style="margin-bottom:10px"><span style="font-size:12px;color:var(--fg-muted)">Sintomas: </span>${log.symptoms.map(s=>{const sym=SYM.find(x=>x.id===s);return sym?`<span style="display:inline-flex;align-items:center;gap:4px;background:var(--accent-soft);color:var(--accent);padding:3px 8px;border-radius:12px;font-size:11px;margin:2px"><i class="fas ${sym.i}"></i>${sym.l}</span>`:'';}).join('')}</div>`;if(log.mood){const m=MOODS[log.mood];if(m)h+=`<div style="margin-bottom:10px"><span style="font-size:12px;color:var(--fg-muted)">Humor: </span><span style="color:${m.c};font-size:13px"><i class="fas ${m.i}"></i> ${m.l}</span></div>`;}if(log.note)h+=`<div style="font-size:13px;color:var(--fg-muted);font-style:italic;margin-top:8px">"${log.note}"</div>`;h+=`<button class="delete-btn" style="margin-top:12px" onclick="deleteLog('${selectedDate}')"><i class="fas fa-trash-alt"></i> Apagar</button>`;document.getElementById('dayDetailContent').innerHTML=h;}
-function deleteLog(k){delete state.logs[k];saveState();renderCalendar();showToast('Registro apagado','fa-trash-alt');}
+/* Insight row */
+.ir{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.03)}.ir:last-child{border-bottom:none}
+.ii{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.if{flex:1}.it{font-weight:600;font-size:13px}.id{font-size:11px;color:var(--fg3);margin-top:1px}
+.ib{height:3px;background:rgba(255,255,255,.04);border-radius:2px;overflow:hidden;margin-top:4px}
+.ib-f{height:100%;border-radius:2px;transition:width .4s}
 
-/* ===== REGISTRAR ===== */
-function renderLog(){const p=selectedDate.split('-'),d=new Date(+p[0],+p[1]-1,+p[2]);document.getElementById('logDateTitle').textContent=selectedDate===dateKey(new Date())?'Registrar — Hoje':`Registrar — ${d.getDate()}/${d.getMonth()+1}`;const ex=state.logs[selectedDate];logPeriod=ex?ex.period:false;logFlow=ex?(ex.flow||''):'';logSymptomsArr=ex?(ex.symptoms||[]):[];logMood=ex?(ex.mood||''):'';document.getElementById('logNote').value=ex?(ex.note||''):'';updateLogUI();renderLogSymptoms();}
-function updateLogUI(){document.getElementById('logPeriodNo').className='intensity-btn'+(!logPeriod?' active-low':'');document.getElementById('logPeriodYes').className='intensity-btn'+(logPeriod?' active-high':'');document.getElementById('flowSection').style.display=logPeriod?'block':'none';document.querySelectorAll('[data-flow]').forEach(b=>{const f=b.dataset.flow;b.className='intensity-btn'+(logFlow===f?` active-${f==='leve'?'low':f==='moderado'?'med':'high'}`:'');});document.querySelectorAll('[data-mood]').forEach(b=>{const m=b.dataset.mood;b.className='intensity-btn'+(logMood===m?` active-${m==='triste'?'low':m==='neutro'?'med':m==='bem'?'med':'high'}`:'');});}
-function togglePeriod(v){logPeriod=v;if(!v)logFlow='';updateLogUI();}
-function setFlow(v){logFlow=logFlow===v?'':v;updateLogUI();}
-function setMood(v){logMood=logMood===v?'':v;updateLogUI();}
-function renderLogSymptoms(){document.getElementById('logSymptoms').innerHTML=SYM.map(s=>`<button class="symptom-btn ${logSymptomsArr.includes(s.id)?'active':''}" onclick="toggleSymptom('${s.id}')"><i class="fas ${s.i}"></i>${s.l}</button>`).join('');}
-function toggleSymptom(id){const i=logSymptomsArr.indexOf(id);if(i>=0)logSymptomsArr.splice(i,1);else logSymptomsArr.push(id);renderLogSymptoms();}
-function saveLog(){const note=document.getElementById('logNote').value.trim();state.logs[selectedDate]={period:logPeriod,flow:logFlow,symptoms:[...logSymptomsArr],mood:logMood,note};if(logPeriod){const l=new Date(state.lastPeriodStart+'T12:00:00'),c=new Date(selectedDate+'T12:00:00');if(c>l)state.lastPeriodStart=selectedDate;}saveState();showToast('Registro salvo','fa-check-circle');navigateTo('home');}
+/* Settings item */
+.si{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.03)}.si:last-child{border-bottom:none}
+.sl{display:flex;align-items:center;gap:10px}
+.sl i{width:18px;text-align:center;color:var(--fg3);font-size:14px}
+.sl span{font-size:13px}
+.sv{font-size:12px;color:var(--fg3);display:flex;align-items:center;gap:5px;cursor:pointer}
 
-/* ===== REMÉDIOS ===== */
-function renderMeds(){const tk=dateKey(new Date()),todayMeds=state.medications.filter(m=>shouldTakeToday(m));
-if(!todayMeds.length){document.getElementById('medsList').innerHTML='';document.getElementById('medsEmpty').style.display='block';document.getElementById('medProgressFill').style.width='0%';document.getElementById('medProgressText').textContent='0/0';}
-else{document.getElementById('medsEmpty').style.display='none';let tc=0;
-document.getElementById('medsList').innerHTML=todayMeds.map(med=>{const taken=state.medTaken[tk]&&state.medTaken[tk][med.id];if(taken)tc++;const c=MC[med.color%MC.length];const info=getMedCycleInfo(med);
-let cb='';if(info){const tp=(med.takeDays/info.totalCycle)*100,pp=(med.pauseDays/info.totalCycle)*100,mp=(info.dayInCycle-1)/info.totalCycle*100;
-cb=`<div class="med-cycle-bar"><div class="med-cycle-label"><span class="med-cycle-label-take">Tomar: ${med.takeDays}d</span><span class="med-cycle-label-pause">Pausa: ${med.pauseDays}d</span></div><div class="med-cycle-track" style="position:relative"><div class="med-cycle-take ${info.isTaking?'active':''}" style="width:${tp}%"></div><div class="med-cycle-pause ${!info.isTaking?'active':''}" style="width:${pp}%"></div><div class="med-cycle-day-marker" style="left:${mp}%"><div class="med-cycle-day-dot"></div></div></div><div class="med-cycle-info"><span class="med-cycle-status ${info.isTaking?'taking':'paused'}">${info.isTaking?'Tomando':'Pausa'}</span><span class="med-cycle-days-left">${info.isTaking?`${info.daysLeft}d para pausa`:`${info.daysLeft}d para voltar`}</span></div></div>`;}
-return`<div class="med-card"><div class="med-card-top"><div class="med-icon" style="background:${c}22;color:${c}"><i class="fas fa-pills"></i></div><div class="med-info"><div class="med-name">${med.name}${!info?'<span class="no-cycle-badge">Sem ciclo</span>':''}</div><div class="med-dose">${med.dose}</div><div class="med-time"><i class="far fa-clock"></i> ${med.time}</div></div><div class="med-actions"><button class="med-action-btn" onclick="openEditMedModal('${med.id}')"><i class="fas fa-pen"></i></button><button class="med-action-btn delete" onclick="confirmDeleteMed('${med.id}')"><i class="fas fa-trash-alt"></i></button><button class="med-check ${taken?'taken':''}" onclick="toggleMedTaken('${med.id}')"><i class="fas fa-check"></i></button></div></div>${cb}</div>`;}).join('');
-document.getElementById('medProgressFill').style.width=(tc/todayMeds.length*100)+'%';document.getElementById('medProgressText').textContent=`${tc}/${todayMeds.length}`;}
-renderMedChart();}
-function toggleMedTaken(medId){const tk=dateKey(new Date());if(!state.medTaken[tk])state.medTaken[tk]={};state.medTaken[tk][medId]=!state.medTaken[tk][medId];if(!state.medTaken[tk][medId])delete state.medTaken[tk][medId];saveState();renderMeds();if(state.medTaken[tk][medId])showToast('Marcado como tomado','fa-check-circle');}
-function renderMedChart(){const chart=document.getElementById('medChart'),today=new Date(),dow=today.getDay(),mo=dow===0?-6:1-dow;let bars='';for(let i=0;i<7;i++){const d=new Date(today);d.setDate(d.getDate()+mo+i);const k=dateKey(d),dwd=['dom','seg','ter','qua','qui','sex','sab'][d.getDay()];let total=0,taken=0;state.medications.forEach(m=>{let st=false;if(m.takeDays&&m.takeDays>0){const info=getMedCycleInfoForDate(m,k);if(info&&info.isTaking&&m.schedule.includes(dwd))st=true;}else{if(m.schedule.includes(dwd))st=true;}if(st){total++;if(state.medTaken[k]&&state.medTaken[k][m.id])taken++;}});if(!total){bars+=`<div class="mini-chart-bar" style="height:4px;opacity:0.3"></div>`;continue;}bars+=`<div class="mini-chart-bar" style="height:${Math.max(4,taken/total*60)}px;${d>today?'opacity:0.2;':''}"></div>`;}chart.innerHTML=bars;}
+/* Toggle */
+.tgl{width:42px;height:24px;background:var(--fg3);border-radius:12px;position:relative;cursor:pointer;transition:.3s;border:none}
+.tgl.on{background:var(--ac)}.tgl::after{content:'';width:18px;height:18px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:.3s}.tgl.on::after{transform:translateX(18px)}
 
-/* ===== FORMULÁRIO MEDICAMENTO ===== */
-function openAddMedModal(){openMedFormModal(null);}
-function openEditMedModal(id){const m=state.medications.find(x=>x.id===id);if(m)openMedFormModal(m);}
-function openMedFormModal(editMed){const isEdit=!!editMed;const colors=MC.map((c,i)=>`<div class="color-opt" data-color="${i}" style="width:28px;height:28px;border-radius:50%;background:${c};cursor:pointer;border:2px solid transparent;transition:all .2s" onclick="selectMedColor(${i})"></div>`).join('');
-const days=['seg','ter','qua','qui','sex','sab','dom'].map(d=>{const ch=isEdit?editMed.schedule.includes(d):true;return`<label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" class="med-day-check" value="${d}" ${ch?'checked':''}> ${DIAS_SEMANA_CURTO[d]}</label>`;}).join('');
-document.getElementById('modalContent').innerHTML=`<div class="modal-title">${isEdit?'Editar':'Adicionar'} Remedio</div>
-<div class="form-group"><label class="form-label">Nome</label><input type="text" class="form-input" id="medNameInput" placeholder="Ex: Anticoncepcional (Ciclo 21)" value="${isEdit?editMed.name:''}"></div>
-<div class="form-row"><div class="form-group"><label class="form-label">Dosagem</label><input type="text" class="form-input" id="medDoseInput" placeholder="Ex: 1 comprimido" value="${isEdit?editMed.dose:''}"></div><div class="form-group"><label class="form-label">Horario</label><input type="time" class="form-input" id="medTimeInput" value="${isEdit?editMed.time:'08:00'}"></div></div>
-<div class="form-group"><label class="form-label">Cor</label><div style="display:flex;gap:8px" id="medColorPicker">${colors}</div></div>
-<div class="form-group"><label class="form-label">Dias da semana</label><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">${days}</div></div>
-<div style="background:rgba(255,255,255,0.03);border-radius:var(--radius-sm);padding:14px;margin-bottom:14px;border:1px solid rgba(255,255,255,0.06)">
-<div style="font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;gap:6px"><i class="fas fa-sync-alt" style="color:var(--accent)"></i> Ciclo de uso/pausa</div>
-<div style="font-size:11px;color:var(--fg-dim);margin-bottom:10px">0 em ambos = tomar todo dia sem pausa.</div>
-<div class="form-row-3"><div class="form-group" style="margin-bottom:0"><label class="form-label">Dias tomando</label><input type="number" class="form-input" id="medTakeDays" min="0" max="90" value="${isEdit?(editMed.takeDays||0):0}"></div><div class="form-group" style="margin-bottom:0"><label class="form-label">Dias de pausa</label><input type="number" class="form-input" id="medPauseDays" min="0" max="30" value="${isEdit?(editMed.pauseDays||0):0}"></div><div class="form-group" style="margin-bottom:0"><label class="form-label">Inicio da cartela</label><input type="date" class="form-input" id="medStartDate" value="${isEdit?(editMed.startDate||dateKey(new Date())):dateKey(new Date())}"></div></div>
-<div style="margin-top:8px;font-size:11px;color:var(--fg-dim)"><i class="fas fa-info-circle" style="color:var(--blue)"></i> O "inicio da cartela" é o dia que você tomou a PRIMEIRA pílula dessa cartela. Ex: Ciclo 21 = 21 dias tomar / 7 dias pausa.</div>
-</div>
-<button class="save-btn" onclick="${isEdit?`saveEditMed('${editMed.id}')`:'addMedication()'}"><i class="fas fa-${isEdit?'save':'plus'}"></i> ${isEdit?'Salvar':'Adicionar'}</button>`;
-selectedMedColor=isEdit?editMed.color:0;updateColorPicker();document.getElementById('modalOverlay').classList.remove('modal-full');openModal();}
-function selectMedColor(i){selectedMedColor=i;updateColorPicker();}
-function updateColorPicker(){document.querySelectorAll('.color-opt').forEach((el,idx)=>{el.style.borderColor=idx===selectedMedColor?'#fff':'transparent';el.style.transform=idx===selectedMedColor?'scale(1.15)':'scale(1)';});}
-function getMedFormData(){return{name:document.getElementById('medNameInput').value.trim(),dose:document.getElementById('medDoseInput').value.trim(),time:document.getElementById('medTimeInput').value,days:Array.from(document.querySelectorAll('.med-day-check:checked')).map(c=>c.value),takeDays:parseInt(document.getElementById('medTakeDays').value)||0,pauseDays:parseInt(document.getElementById('medPauseDays').value)||0,startDate:document.getElementById('medStartDate').value||dateKey(new Date())};}
-function addMedication(){const d=getMedFormData();if(!d.name){showToast('Informe o nome','fa-exclamation-circle');return;}if(!d.dose){showToast('Informe a dosagem','fa-exclamation-circle');return;}if(!d.days.length){showToast('Selecione pelo menos um dia','fa-exclamation-circle');return;}state.medications.push({id:'med_'+Date.now(),name:d.name,dose:d.dose,time:d.time,color:selectedMedColor,schedule:d.days,takeDays:d.takeDays,pauseDays:d.pauseDays,startDate:d.startDate});saveState();closeModal();renderMeds();showToast('Remedio adicionado','fa-check-circle');}
-function saveEditMed(medId){const med=state.medications.find(m=>m.id===medId);if(!med)return;const d=getMedFormData();if(!d.name||!d.dose||!d.days.length){showToast('Preencha tudo','fa-exclamation-circle');return;}Object.assign(med,{name:d.name,dose:d.dose,time:d.time,color:selectedMedColor,schedule:d.days,takeDays:d.takeDays,pauseDays:d.pauseDays,startDate:d.startDate});saveState();closeModal();renderMeds();showToast('Atualizado','fa-check-circle');}
-function confirmDeleteMed(medId){const med=state.medications.find(m=>m.id===medId);if(!med)return;document.getElementById('modalContent').innerHTML=`<div class="modal-title">Excluir?</div><p style="color:var(--fg-muted);font-size:14px;margin-bottom:20px">Excluir <strong style="color:var(--fg)">${med.name}</strong>?</p><div style="display:flex;gap:10px"><button class="save-btn outline" style="flex:1;margin-top:0" onclick="closeModal()">Cancelar</button><button class="save-btn danger" style="flex:1;margin-top:0" onclick="deleteMed('${medId}')">Excluir</button></div>`;openModal();}
-function deleteMed(medId){state.medications=state.medications.filter(m=>m.id!==medId);saveState();closeModal();renderMeds();showToast('Excluido','fa-trash-alt');}
+/* Form */
+.fi{width:100%;padding:10px;background:rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.04);border-radius:var(--rx);color:var(--fg);font-family:'Outfit',sans-serif;font-size:13px;outline:none;transition:border .2s}
+.fi:focus{border-color:var(--ac3)}
+.fg{margin-bottom:12px}
+.fl{font-size:11px;color:var(--fg3);font-weight:500;margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:.5px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tt{display:flex;gap:8px;margin-top:4px}
+.tb{flex:1;padding:12px 8px;border-radius:var(--rs);border:1px solid rgba(255,255,255,.05);background:transparent;color:var(--fg3);cursor:pointer;transition:.2s;font-family:'Outfit',sans-serif;font-size:12px;text-align:center}
+.tb.on{border-color:var(--ac);background:var(--ac2);color:var(--ac)}
+.tb i{display:block;font-size:18px;margin-bottom:4px}.tb small{font-size:9px;opacity:.6}
 
-/* ===== INSIGHTS ===== */
-function renderInsights(){const pillMed=getPillMed();
-if(pillMed){const info=getMedCycleInfo(pillMed);if(info){const nc=info.nextCartelaDate;
-document.getElementById('cycleInsights').innerHTML=`<div class="insight-card"><div class="insight-icon" style="background:${info.isTaking?'var(--green-soft)':'var(--yellow-soft)'};color:${info.isTaking?'var(--green)':'var(--yellow)'}"><i class="fas ${info.isTaking?'fa-pills':'fa-pause-circle'}"></i></div><div class="insight-info"><div class="insight-title">${info.isTaking?'Tomando a pílula':'Pausa da pílula'}</div><div class="insight-desc">${info.isTaking?`Dia ${info.dayInCycle} de ${info.takeDays}`:`Dia ${info.dayInCycle-info.takeDays} de ${info.pauseDays} da pausa`}</div></div></div>
-<div class="insight-card"><div class="insight-icon" style="background:var(--green-soft);color:var(--green)"><i class="fas fa-calendar-check"></i></div><div class="insight-info"><div class="insight-title">Proxima cartela</div><div class="insight-desc">${formatDateExt(nc)} (${getDOWName(nc)})</div></div></div>
-<div class="insight-card"><div class="insight-icon" style="background:var(--yellow-soft);color:var(--yellow)"><i class="fas fa-sync-alt"></i></div><div class="insight-info"><div class="insight-title">Ciclo da pílula</div><div class="insight-desc">${info.takeDays} dias tomar + ${info.pauseDays} dias pausa = ${info.totalCycle} dias</div></div></div>`;}}
-else{document.getElementById('cycleInsights').innerHTML=`<div class="insight-card"><div class="insight-icon" style="background:var(--accent-soft);color:var(--accent)"><i class="fas fa-info-circle"></i></div><div class="insight-info"><div class="insight-title">Nenhuma pílula com ciclo configurada</div><div class="insight-desc">Adicione um anticoncepcional com ciclo de uso/pausa para ver os insights.</div></div></div>`;}
-const sc={};Object.values(state.logs).forEach(l=>{if(l.symptoms)l.symptoms.forEach(s=>{sc[s]=(sc[s]||0)+1;});});const sorted=Object.entries(sc).sort((a,b)=>b[1]-a[1]).slice(0,5);
-document.getElementById('frequentSymptoms').innerHTML=sorted.length?sorted.map(([id,count])=>{const sym=SYM.find(s=>s.id===id);if(!sym)return '';return`<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:13px"><i class="fas ${sym.i}" style="color:var(--accent);margin-right:6px"></i>${sym.l}</span><span style="font-size:12px;color:var(--fg-muted)">${count}x</span></div><div style="height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden"><div style="height:100%;width:${count/sorted[0][1]*100}%;background:linear-gradient(90deg,var(--accent),var(--pink));border-radius:2px"></div></div></div>`;}).join(''):'<div style="color:var(--fg-dim);font-size:13px">Sem dados suficientes.</div>';
-const pd=Object.keys(state.logs).filter(k=>state.logs[k].period).sort();if(pd.length<2){document.getElementById('cycleHistory').innerHTML='<div style="color:var(--fg-dim);font-size:13px">Registre pelo menos 2 menstruações.</div>';return;}let hh='';for(let i=pd.length-1;i>=Math.max(0,pd.length-6);i--){const pD=new Date(pd[i]+'T12:00:00');let nD=i<pd.length-1?new Date(pd[i+1]+'T12:00:00'):null;let len=nD?Math.round((nD-pD)/864e5):'Em andamento';hh+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;${i>0?'border-top:1px solid rgba(255,255,255,0.04);':''}"><div><div style="font-size:14px;font-weight:500">${pD.getDate()}/${pD.getMonth()+1}/${pD.getFullYear()}</div>${i===pd.length-1?'<span style="font-size:11px;color:var(--accent)">Atual</span>':''}</div><div style="font-size:13px;color:var(--fg-muted)">${len==='Em andamento'?'Em andamento':len+' dias'}</div></div>`;}document.getElementById('cycleHistory').innerHTML=hh;}
+/* Modal */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+.mo.show{display:flex}
+.mo-full{align-items:center!important}
+.ms{background:var(--bg2);border-radius:var(--r) var(--r) 0 0;padding:20px 18px 36px;width:100%;max-width:430px;max-height:85vh;overflow-y:auto;animation:slUp .25s ease}
+.mo-full .ms{border-radius:var(--r);max-height:90vh;margin:16px}
+@keyframes slUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.mh{width:32px;height:3px;background:var(--fg3);border-radius:2px;margin:0 auto 16px;opacity:.5}
+.mt{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:16px}
 
-/* ===== CONFIGURAÇÕES ===== */
-function renderSettings(){document.getElementById('settingName').textContent=state.userName||'Toque para definir';document.getElementById('settingCycleLen').textContent=state.cycleLength;document.getElementById('settingPeriodLen').textContent=state.periodLength;document.getElementById('settingLastPeriod').value=state.lastPeriodStart;document.getElementById('toggleNotif').className='toggle'+(state.settings.notif?' on':'');document.getElementById('toggleSound').className='toggle'+(state.settings.sound?' on':'');document.getElementById('toggleMedNotif').className='toggle'+(state.settings.medNotif?' on':'');}
-document.getElementById('settingLastPeriod').addEventListener('change',function(){if(this.value){state.lastPeriodStart=this.value;saveState();showToast('Data atualizada','fa-check-circle');}});
-document.getElementById('settingCycleItem').addEventListener('click',()=>{openNumModal('Duracao do ciclo',state.cycleLength,20,45,v=>{state.cycleLength=v;saveState();renderSettings();showToast(`Ciclo: ${v} dias`,'fa-check-circle');});});
-document.getElementById('settingPeriodItem').addEventListener('click',()=>{openNumModal('Duracao da menstruacao',state.periodLength,2,10,v=>{state.periodLength=v;saveState();renderSettings();showToast(`Menstruação: ${v} dias`,'fa-check-circle');});});
-function toggleSetting(k){state.settings[k]=!state.settings[k];saveState();renderSettings();}
-function openNameModal(){document.getElementById('modalContent').innerHTML=`<div class="modal-title">Seu nome</div><div class="form-group"><label class="form-label">Como quer ser chamada?</label><input type="text" class="form-input" id="nameInput" placeholder="Seu nome" value="${state.userName||''}" maxlength="30"></div><div style="display:flex;gap:10px"><button class="save-btn outline" style="flex:1;margin-top:0" onclick="closeModal()">Cancelar</button><button class="save-btn" style="flex:1;margin-top:0" onclick="saveName()">Salvar</button></div>`;openModal();setTimeout(()=>{const i=document.getElementById('nameInput');if(i)i.focus();},400);}
-function saveName(){const n=document.getElementById('nameInput').value.trim();state.userName=n;saveState();closeModal();renderSettings();showToast(n?`Olá, ${n}!`:'Nome removido','fa-user');}
-function exportData(){const b=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`florea_backup_${dateKey(new Date())}.json`;a.click();showToast('Exportado','fa-download');}
-function confirmReset(){document.getElementById('modalContent').innerHTML=`<div class="modal-title">Apagar tudo?</div><p style="color:var(--fg-muted);font-size:14px;margin-bottom:20px">Irreversível.</p><div style="display:flex;gap:10px"><button class="save-btn outline" style="flex:1;margin-top:0" onclick="closeModal()">Cancelar</button><button class="save-btn danger" style="flex:1;margin-top:0" onclick="resetAll()">Apagar</button></div>`;openModal();}
-function resetAll(){localStorage.removeItem('florea_v5');state=loadState();saveState();closeModal();navigateTo('home');showToast('Dados apagados','fa-trash-alt');}
+/* Toast */
+.tc{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:6px;pointer-events:none;width:88%;max-width:380px}
+.ts{background:var(--card2);border:1px solid rgba(255,255,255,.06);border-radius:var(--rx);padding:12px 16px;font-size:12px;color:var(--fg);box-shadow:0 4px 20px rgba(0,0,0,.3);animation:tI .25s ease,tO .25s ease 3.5s forwards;pointer-events:auto;display:flex;align-items:center;gap:8px}
+@keyframes tI{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes tO{to{opacity:0;transform:translateY(-8px)}}
 
-/* ===== TUTORIAL ===== */
-function openTutorial(){tutStep=0;renderTutStep();document.getElementById('modalOverlay').classList.add('show');document.getElementById('modalOverlay').classList.add('modal-full');}
-function closeTutorial(){document.getElementById('modalOverlay').classList.remove('show');document.getElementById('modalOverlay').classList.remove('modal-full');}
-function tutNext(){if(tutStep<4){tutStep++;renderTutStep();}else{closeTutorial();state.tutorialSeen=true;saveState();}}
-function tutPrev(){if(tutStep>0){tutStep--;renderTutStep();}}
-function renderTutStep(){const dots=Array.from({length:5},(_,i)=>`<div class="tut-step-dot ${i<tutStep?'done':''} ${i===tutStep?'active':''}"></div>`).join('');let c='';
-if(tutStep===0){c=`<div class="modal-title">Como configurar o Florea</div><p style="color:var(--fg-muted);font-size:14px;line-height:1.6;margin-bottom:16px">Vou te mostrar com um <strong style="color:var(--fg)">exemplo real</strong>. Situação:</p><div style="background:rgba(232,116,97,0.08);border:1px solid rgba(232,116,97,0.15);border-radius:var(--radius-sm);padding:16px"><div style="font-size:13px;color:var(--accent);font-weight:600;margin-bottom:8px">Cenário de exemplo</div><div style="font-size:13px;color:var(--fg-muted);line-height:1.7">Você toma <strong style="color:var(--fg)">anticoncepcional Ciclo 21</strong> (21 tomar, 7 pausa).<br>Começou a cartela no dia <strong style="color:var(--fg)">04/07/2026</strong>.<br>Menstruação <strong style="color:var(--pink)">desceu 25/07/2026</strong> (3o dia agora).<br>Pergunta: deveria ter parado o remédio?</div></div>`;}
-else if(tutStep===1){c=`<div class="modal-title">Passo 1: A conta</div><p style="color:var(--fg-muted);font-size:14px;line-height:1.6">Começou <strong style="color:var(--fg)">04/07</strong>, hoje é <strong style="color:var(--fg)">27/07</strong>:</p><div class="tut-visual"><div style="font-size:36px;font-weight:900;color:var(--accent);font-family:'Playfair Display',serif">23 dias</div><div style="font-size:13px;color:var(--fg-muted);margin-top:4px">Desde o início da cartela</div></div><div style="background:rgba(0,0,0,0.2);border-radius:var(--radius-xs);padding:14px;margin:12px 0"><div style="font-size:13px;color:var(--fg);font-weight:500;margin-bottom:8px">Conta:</div><div style="font-size:13px;color:var(--fg-muted);line-height:1.8">04/07 até 24/07 = <strong style="color:var(--green)">21 dias tomando</strong><br>25/07 até 27/07 = <strong style="color:var(--yellow)">3 dias de pausa</strong><br>Total: <strong style="color:var(--fg)">23 dias</strong> no ciclo do remédio</div></div><div style="background:var(--yellow-soft);border-radius:var(--radius-xs);padding:12px;margin-top:12px;font-size:13px;color:var(--yellow)"><i class="fas fa-exclamation-triangle"></i> Sim, você já deveria ter parado! Os 21 dias acabaram no dia 24/07.</div>`;}
-else if(tutStep===2){c=`<div class="modal-title">Passo 2: A barra visual</div><p style="color:var(--fg-muted);font-size:14px;line-height:1.6">O app mostra assim:</p><div class="tut-visual"><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:6px"><span style="color:var(--green)">21 dias tomar</span><span style="color:var(--yellow)">7 dias pausa</span></div><div class="tut-fake-bar"><div class="tut-fake-take" style="width:75%"></div><div class="tut-fake-pause" style="width:25%"></div></div><div style="position:relative;height:0;margin-top:-5px"><div class="tut-fake-dot" style="left:85.7%"></div></div><div style="display:flex;justify-content:space-between;margin-top:14px;font-size:11px;color:var(--fg-dim)"><span>04/07</span><span>24/07</span><span>31/07</span></div><div style="margin-top:12px"><span class="med-cycle-status paused" style="font-size:12px">Pausa</span><div style="font-size:12px;color:var(--yellow);margin-top:4px">4 dias para nova cartela (01/08)</div></div></div><p style="color:var(--fg-muted);font-size:13px;margin-top:12px">O pontinho branco está na <strong style="color:var(--yellow)">fase de pausa</strong>.</p>`;}
-else if(tutStep===3){c=`<div class="modal-title">Passo 3: O que preencher</div><p style="color:var(--fg-muted);font-size:14px;line-height:1.6;margin-bottom:12px">Campos exatos do formulário:</p><div class="tut-example-box"><div class="tut-example-icon" style="background:var(--accent-soft);color:var(--accent)"><i class="fas fa-pills"></i></div><div><div style="font-size:13px;font-weight:600">Nome</div><div style="font-size:12px;color:var(--fg-muted)">Anticoncepcional (Ciclo 21)</div></div></div><div class="tut-example-box"><div class="tut-example-icon" style="background:var(--green-soft);color:var(--green)"><i class="fas fa-capsules"></i></div><div><div style="font-size:13px;font-weight:600">Dosagem</div><div style="font-size:12px;color:var(--fg-muted)">1 comprimido</div></div></div><div style="background:rgba(255,255,255,0.03);border-radius:var(--radius-xs);padding:14px;margin:12px 0;border:1px solid rgba(255,255,255,0.06)"><div style="font-size:13px;font-weight:600;margin-bottom:10px;color:var(--accent)"><i class="fas fa-sync-alt"></i> Ciclo de uso/pausa</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div style="text-align:center"><div style="font-size:22px;font-weight:800;color:var(--green)">21</div><div style="font-size:10px;color:var(--fg-dim)">Dias tomando</div></div><div style="text-align:center"><div style="font-size:22px;font-weight:800;color:var(--yellow)">7</div><div style="font-size:10px;color:var(--fg-dim)">Dias de pausa</div></div><div style="text-align:center"><div style="font-size:14px;font-weight:700;color:var(--fg)">04/07/2026</div><div style="font-size:10px;color:var(--fg-dim)">Inicio da cartela</div></div></div></div><p style="color:var(--fg-muted);font-size:13px"><i class="fas fa-star" style="color:var(--yellow)"></i> A <strong style="color:var(--fg)">data de início</strong> é o dia que tomou a <strong>primeira pílula</strong> dessa cartela.</p>`;}
-else if(tutStep===4){c=`<div class="modal-title">Passo 4: Regras de segurança</div><div class="safety-alert" style="margin-bottom:12px"><i class="fas fa-exclamation-circle"></i><div class="safety-alert-text"><strong>Regra de ouro da pílula:</strong> Inicie a nova cartela <strong>rigorosamente na data certa</strong>, mesmo que ainda esteja menstruada. Nunca espere a menstruação acabar — isso compromete a eficácia.</div></div><div class="safety-alert" style="margin-bottom:12px"><i class="fas fa-skull-crossbones"></i><div class="safety-alert-text"><strong>Enxaqueca com aura:</strong> Se tiver dor de cabeça com pontos brilhantes na visão, flashes ou tontura, <strong>NÃO tome pílulas com estrogênio</strong>. Suspenda e procure um médico imediatamente.</div></div><div class="safety-alert" style="margin-bottom:12px"><i class="fas fa-exclamation-triangle"></i><div class="safety-alert-text"><strong>Superdosagem:</strong> Não duplique Ibuprofeno para cólica E dor de cabeça ao mesmo tempo. Risco de sobrecarga nos rins e estômago.</div></div><div style="background:rgba(107,203,139,0.08);border:1px solid rgba(107,203,139,0.15);border-radius:var(--radius-xs);padding:14px"><div style="font-size:13px;font-weight:600;color:var(--green);margin-bottom:6px"><i class="fas fa-check-circle"></i> Resumo: o que o app faz</div><div style="font-size:12px;color:var(--fg-muted);line-height:1.8">Na pausa: <strong style="color:var(--yellow)">não lembra de tomar</strong><br>Dia 01/08: <strong style="color:var(--green)">volta a lembrar</strong> automaticamente<br>Calendário: <strong style="color:var(--yellow)">bordas tracejadas</strong> = pausa<br>Quem toma pílula: <strong style="color:var(--fg)">não mostra "fase fértil"</strong> (não ovula)</div></div>`;}
-document.getElementById('modalContent').innerHTML=`<div class="tut-step active">${c}</div><div class="tut-step-dots">${dots}</div><div style="display:flex;gap:10px">${tutStep>0?'<button class="save-btn outline" style="flex:1;margin-top:0" onclick="tutPrev()"><i class="fas fa-arrow-left"></i> Voltar</button>':''}<button class="save-btn" style="flex:1;margin-top:0" onclick="tutNext()">${tutStep<4?'Próximo <i class="fas fa-arrow-right"></i>':'Entendi! <i class="fas fa-check"></i>'}</button></div>`;}
+/* Alerta de pausa */
+.ao{position:fixed;inset:0;z-index:10000;background:rgba(26,18,21,.95);backdrop-filter:blur(20px);display:none;align-items:center;justify-content:center;flex-direction:column;gap:18px;padding:40px}
+.ao.show{display:flex;animation:ap 2s ease-in-out infinite}
+@keyframes ap{0%,100%{background:rgba(26,18,21,.95)}50%{background:rgba(232,116,97,.08)}}
+.ai{width:70px;height:70px;border-radius:50%;background:var(--ac2);display:flex;align-items:center;justify-content:center;font-size:30px;color:var(--ac);animation:as .4s ease-in-out infinite}
+@keyframes as{0%,100%{transform:rotate(0)}25%{transform:rotate(12deg)}75%{transform:rotate(-12deg)}}
+.at{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;text-align:center}
+.an{font-size:15px;color:var(--ac);text-align:center}
+.ad{font-size:13px;color:var(--fg3);text-align:center}
+.ab2{padding:13px 44px;border:none;border-radius:var(--rs);background:linear-gradient(135deg,var(--ac),var(--pk));color:#fff;font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px}
 
-/* ===== MODAL ===== */
-function openModal(){document.getElementById('modalOverlay').classList.add('show');}
-function closeModal(){document.getElementById('modalOverlay').classList.remove('show');document.getElementById('modalOverlay').classList.remove('modal-full');}
-function closeModalOutside(e){if(e.target===document.getElementById('modalOverlay'))closeModal();}
-function openNumModal(title,current,min,max,cb){document.getElementById('modalContent').innerHTML=`<div class="modal-title">${title}</div><div style="display:flex;align-items:center;justify-content:center;gap:20px;margin:20px 0"><button class="calendar-nav-btn" style="width:44px;height:44px;font-size:18px" onclick="adjN(-1)"><i class="fas fa-minus"></i></button><span id="numD" style="font-size:36px;font-weight:800;font-family:'Playfair Display',serif">${current}</span><button class="calendar-nav-btn" style="width:44px;height:44px;font-size:18px" onclick="adjN(1)"><i class="fas fa-plus"></i></button></div><div style="display:flex;gap:10px"><button class="save-btn outline" style="flex:1;margin-top:0" onclick="closeModal()">Cancelar</button><button class="save-btn" style="flex:1;margin-top:0" onclick="confN()">Confirmar</button></div>`;window._nm={value:current,min,max,cb};openModal();}
-function adjN(d){const m=window._nm;m.value=Math.max(m.min,Math.min(m.max,m.value+d));document.getElementById('numD').textContent=m.value;}
-function confN(){window._nm.cb(window._nm.value);closeModal();}
+/* Bottom nav — .ni usado apenas aqui */
+.bn{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(26,18,21,.94);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,.04);display:flex;padding:6px 0 max(6px,env(safe-area-inset-bottom));z-index:100}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 0;cursor:pointer;color:var(--fg3);transition:.2s;border:none;background:none;font-family:'Outfit',sans-serif}
+.ni i{font-size:18px;transition:.2s}.ni span{font-size:9px;font-weight:500}
+.ni.on{color:var(--ac)}.ni.on i{transform:scale(1.08)}
 
-/* ===== TOAST ===== */
-function showToast(msg,icon='fa-info-circle'){const c=document.getElementById('toastContainer'),t=document.createElement('div');t.className='toast';t.innerHTML=`<i class="fas ${icon}" style="color:var(--accent);flex-shrink:0;margin-top:1px"></i><span>${msg}</span>`;c.appendChild(t);setTimeout(()=>{if(t.parentNode)t.remove();},4500);}
+/* FAB */
+.fb{position:fixed;bottom:82px;right:max(16px,calc((100vw-430px)/2+16px));width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--pk));border:none;color:#fff;font-size:20px;cursor:pointer;box-shadow:0 4px 16px var(--ac3);z-index:99;display:flex;align-items:center;justify-content:center;transition:.2s}
+.fb:active{transform:scale(.88)}
 
-/* ===== ALARME CHECK ===== */
-function checkMedReminders(){if(!state.settings.medNotif)return;const tk=dateKey(new Date()),now=new Date(),ct=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;state.medications.forEach(med=>{if(!shouldTakeToday(med))return;if(state.medTaken[tk]&&state.medTaken[tk][med.id])return;if(ct===med.time){triggerAlarm(med);if('Notification' in window&&Notification.permission==='granted')new Notification('Florea — Hora do remedio!',{body:`Tomar ${med.name} (${med.dose})`});}});}
-setInterval(checkMedReminders,60000);
+/* Empty state */
+.em{text-align:center;padding:30px 20px;color:var(--fg3)}.em i{font-size:32px;margin-bottom:8px;display:block;opacity:.4}.em p{font-size:13px}
 
-/* ===== PWA ===== */
-function setupPWA(){const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="#1A1215"/><circle cx="50" cy="50" r="25" fill="none" stroke="#E87461" stroke-width="4"/><circle cx="50" cy="50" r="8" fill="#E87461"/><path d="M50 25V30M50 70V75M25 50H30M70 50H75" stroke="#E87461" stroke-width="3" stroke-linecap="round"/></svg>`;const iu=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));const m={name:'Florea',short_name:'Florea',description:'Ciclo menstrual e medicacoes',start_url:'.',display:'standalone',background_color:'#1A1215',theme_color:'#1A1215',icons:[{src:iu,sizes:'any',type:'image/svg+xml'}]};document.getElementById('manifest-link').href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/json'}));}
-async function reqNotif(){if('Notification' in window&&Notification.permission==='default')await Notification.requestPermission();}
+/* Prompt banner */
+.pb{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);width:calc(100% - 40px);max-width:390px;background:var(--card2);border:1px solid var(--ac3);border-radius:var(--rs);padding:14px 16px;display:none;align-items:center;gap:12px;z-index:200;box-shadow:0 8px 32px rgba(0,0,0,.4);animation:pgIn .3s ease}
+.pb.show{display:flex}
+.pi{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--ac),var(--pk));display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;flex-shrink:0}
+.pt{flex:1}.pt-t{font-size:13px;font-weight:600}.pt-d{font-size:11px;color:var(--fg3);margin-top:1px}
+.px{background:none;border:none;color:var(--fg3);cursor:pointer;font-size:14px;padding:4px;flex-shrink:0}
 
-/* ===== INIT ===== */
-function init(){setupPWA();reqNotif();navigateTo('home');document.getElementById('fab').style.display='none';
-if(!state.tutorialSeen)setTimeout(()=>openTutorial(),800);
-else setTimeout(()=>showToast('Configurações > Tutorial para rever','fa-graduation-cap'),2000);}
-init();
-</script>
-</body>
-</html>
+/* Appt soon */
+.appt-soon{background:var(--bl2);border:1px solid rgba(123,164,201,.2);border-radius:var(--rx);padding:10px 12px;margin-bottom:10px;font-size:11px;color:var(--fg2);display:flex;gap:8px;align-items:flex-start}
+.appt-soon i{color:var(--bl);margin-top:1px;flex-shrink:0;font-size:12px}
+
+/* Acompanhamento card */
+.acard{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.03);align-items:flex-start}
+.acard:last-child{border-bottom:none}
+.aci{width:50px;height:50px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.acd{flex:1;min-width:0}
+.acn{font-size:14px;font-weight:600}
